@@ -1,0 +1,41 @@
+<nav class="user-navbar">
+  <div class="nav-brand">
+    <a routerLink="/homePage" class="brand-text">BookHeaven</a>
+  </div>
+
+  <div class="nav-middle">
+    <div class="user-badge">{{ username }} / {{ userRole }}</div>
+    <ul class="nav-links">
+      <li><a routerLink="/homePage" routerLinkActive="active">Home</a></li>
+      <li class="dropdown-item" (mouseenter)="toggleBooksDropdown(true)" (mouseleave)="toggleBooksDropdown(false)">
+        <a class="dropdown-trigger">Books ▾</a>
+        <div class="dropdown-menu" *ngIf="showBooksDropdown">
+          <a routerLink="/userviewbooks" (click)="toggleBooksDropdown(false)">View Books</a>
+          <a routerLink="/userviewappliedrequest" (click)="toggleBooksDropdown(false)">My Rentals</a>
+        </div>
+      </li>
+      <li class="dropdown-item" (mouseenter)="toggleFeedbackDropdown(true)" (mouseleave)="toggleFeedbackDropdown(false)">
+        <a class="dropdown-trigger">Feedback ▾</a>
+        <div class="dropdown-menu" *ngIf="showFeedbackDropdown">
+          <a routerLink="/useraddfeedback" (click)="toggleFeedbackDropdown(false)">Post Feedback</a>
+          <a routerLink="/userviewfeedback" (click)="toggleFeedbackDropdown(false)">My Feedbacks</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="nav-right">
+    <button class="logout-btn" (click)="openLogoutModal()">Logout</button>
+  </div>
+</nav>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showLogoutModal">
+  <div class="modal-box">
+    <p class="modal-message">Are you sure you want to logout?</p>
+    <div class="modal-actions">
+      <button class="btn-success" (click)="confirmLogout()">Yes, Logout</button>
+      <button class="btn-danger" (click)="closeLogoutModal()">Cancel</button>
+    </div>
+  </div>
+</div>

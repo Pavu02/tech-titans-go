@@ -1,0 +1,104 @@
+<app-adminnav></app-adminnav>
+
+<div class="view-container">
+  <h2 class="page-heading">Book Rental Requests for Approval</h2>
+
+  <div class="filter-bar">
+    <div class="search-box">
+      <label for="searchTitle">Search by Book Title: </label>
+      <input
+        id="searchTitle"
+        type="text"
+        placeholder="Search by Book Title..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()"
+        class="form-control-inline"
+      />
+    </div>
+
+    <div class="status-filter">
+      <label for="statusSelect">Filter by Status: </label>
+      <select
+        id="statusSelect"
+        [(ngModel)]="selectedStatus"
+        (change)="onStatusChange()"
+        class="form-control-inline"
+      >
+        <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-responsive" *ngIf="filteredRequests.length > 0; else noRecords">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Username</th>
+          <th>Book Title</th>
+          <th>Author</th>
+          <th>Submission Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of filteredRequests; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ req.user?.username || req.username || 'user' }}</td>
+          <td>{{ req.book?.title || req.bookTitle }}</td>
+          <td>{{ req.book?.author || req.author }}</td>
+          <td>{{ req.requestDate }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="req.status.toLowerCase()">
+              {{ req.status }}
+            </span>
+          </td>
+          <td class="action-cell">
+            <div class="action-btn-group">
+              <button class="btn-primary btn-sm" (click)="showMore(req)">Show More</button>
+              <button
+                class="btn-success btn-sm"
+                *ngIf="req.status !== 'Approved'"
+                (click)="updateStatus(req, 'Approved')"
+              >
+                Approve
+              </button>
+              <button
+                class="btn-danger btn-sm"
+                *ngIf="req.status !== 'Rejected'"
+                (click)="updateStatus(req, 'Rejected')"
+              >
+                Reject
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noRecords>
+    <div class="empty-state">
+      Oops! No records found
+    </div>
+  </ng-template>
+</div>
+
+<!-- Request Details Modal -->
+<div class="modal-overlay" *ngIf="selectedRequest">
+  <div class="modal-box details-modal">
+    <button class="modal-close-btn" (click)="closeDetailsModal()">X</button>
+    <h3 class="modal-title">Request Details</h3>
+    <div class="details-content">
+      <p><strong>Username:</strong> {{ selectedRequest.user?.username || selectedRequest.username || 'user' }}</p>
+      <p><strong>Book Title:</strong> {{ selectedRequest.book?.title || selectedRequest.bookTitle }}</p>
+      <p><strong>Author:</strong> {{ selectedRequest.book?.author || selectedRequest.author }}</p>
+      <p><strong>Genre:</strong> {{ selectedRequest.book?.genre || selectedRequest.genre }}</p>
+      <p><strong>Request Date:</strong> {{ selectedRequest.requestDate }}</p>
+      <p><strong>Return Date:</strong> {{ selectedRequest.returnDate }}</p>
+      <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
+      <p><strong>Comments:</strong> {{ selectedRequest.comments }}</p>
+    </div>
+  </div>
+</div>

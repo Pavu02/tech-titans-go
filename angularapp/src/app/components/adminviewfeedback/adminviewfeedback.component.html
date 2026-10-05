@@ -1,0 +1,51 @@
+<app-adminnav></app-adminnav>
+
+<div class="view-container">
+  <h2 class="page-heading">Feedback Details</h2>
+
+  <div class="table-responsive" *ngIf="feedbacks.length > 0; else noData">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>User Name</th>
+          <th>Feedback</th>
+          <th>Posted Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let fb of feedbacks; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ fb.user?.username || fb.userName || 'user' }}</td>
+          <td>{{ fb.feedbackText }}</td>
+          <td>{{ fb.date }}</td>
+          <td class="action-cell">
+            <button class="btn-primary btn-sm" (click)="showProfile(fb)">Show Profile</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noData>
+    <div class="empty-state">
+      No data found
+    </div>
+  </ng-template>
+</div>
+
+<!-- User Profile Modal -->
+<div class="modal-overlay" *ngIf="showProfileModal">
+  <div class="modal-box profile-modal">
+    <h3 class="modal-title">User Details</h3>
+    <div class="profile-content" *ngIf="selectedUser">
+      <p><strong>Email:</strong> {{ selectedUser.email }}</p>
+      <p><strong>Username:</strong> {{ selectedUser.username }}</p>
+      <p><strong>Mobile Number:</strong> {{ selectedUser.mobileNumber }}</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-danger" (click)="closeProfileModal()">Close</button>
+    </div>
+  </div>
+</div>

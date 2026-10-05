@@ -1,0 +1,88 @@
+<app-usernav></app-usernav>
+
+<div class="view-container">
+  <h2 class="page-heading">Available Books</h2>
+
+  <div class="filter-bar">
+    <div class="search-box">
+      <input
+        id="searchBooks"
+        type="text"
+        placeholder="Search by Title, Author, or Genre..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()"
+        class="form-control-search"
+      />
+    </div>
+  </div>
+
+  <div class="table-responsive" *ngIf="filteredBooks.length > 0; else noRecords">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Genre</th>
+          <th>Rental Fee</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of filteredBooks; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.genre }}</td>
+          <td>₹{{ book.rentalFee }}</td>
+          <td>{{ book.description }}</td>
+          <td>
+            <span [class.text-available]="book.isAvailable" [class.text-unavailable]="!book.isAvailable">
+              {{ book.isAvailable ? 'Available' : 'Not Available' }}
+            </span>
+          </td>
+          <td class="action-cell">
+            <div class="action-btn-group">
+              <button
+                *ngIf="isRented(book.bookId)"
+                class="btn-primary btn-sm"
+                disabled
+              >
+                Rented
+              </button>
+              <button
+                *ngIf="!isRented(book.bookId)"
+                class="btn-success btn-sm"
+                [disabled]="!book.isAvailable"
+                (click)="onRent(book)"
+              >
+                Rent
+              </button>
+              <button class="btn-warning btn-sm" (click)="showCoverImage(book)">
+                Show Cover Image
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noRecords>
+    <div class="empty-state">
+      Oops! No records found
+    </div>
+  </ng-template>
+</div>
+
+<!-- Cover Image Modal -->
+<div class="modal-overlay" *ngIf="selectedCoverImage">
+  <div class="modal-box image-modal">
+    <button class="modal-close-btn" (click)="closeCoverImageModal()">X</button>
+    <div class="cover-image-container">
+      <img [src]="selectedCoverImage" alt="Book Cover" class="cover-preview" />
+    </div>
+  </div>
+</div>

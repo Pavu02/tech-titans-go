@@ -1,0 +1,92 @@
+<app-usernav></app-usernav>
+
+<div class="view-container">
+  <h2 class="page-heading">Applied Book Rental Requests</h2>
+
+  <div class="filter-bar">
+    <div class="search-box">
+      <input
+        id="searchBookTitle"
+        type="text"
+        placeholder="Search by Book Title..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()"
+        class="form-control-search"
+      />
+    </div>
+  </div>
+
+  <div class="table-responsive" *ngIf="filteredRequests.length > 0; else noRecords">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Book Title</th>
+          <th>Request Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of filteredRequests; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ req.book?.title || req.bookTitle }}</td>
+          <td>{{ req.requestDate }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="req.status.toLowerCase()">
+              {{ req.status }}
+            </span>
+          </td>
+          <td class="action-cell">
+            <div class="action-btn-group">
+              <button class="btn-primary btn-sm" (click)="showMore(req)">Show More</button>
+              <button class="btn-danger btn-sm" (click)="openDeleteModal(req)">Delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noRecords>
+    <div class="empty-state">
+      Oops! No records Found
+    </div>
+  </ng-template>
+</div>
+
+<!-- Request Details Modal -->
+<div class="modal-overlay" *ngIf="selectedRequest">
+  <div class="modal-box details-modal">
+    <button class="modal-close-btn" (click)="closeDetailsModal()">X</button>
+    <h3 class="modal-title">Request Details</h3>
+    <div class="details-content">
+      <p><strong>Book Title:</strong> {{ selectedRequest.book?.title || selectedRequest.bookTitle }}</p>
+      <p><strong>Author:</strong> {{ selectedRequest.book?.author || selectedRequest.author }}</p>
+      <p><strong>Genre:</strong> {{ selectedRequest.book?.genre || selectedRequest.genre }}</p>
+      <p><strong>Rental Fee:</strong> ₹{{ selectedRequest.book?.rentalFee || selectedRequest.rentalFee }}</p>
+      <p><strong>Description:</strong> {{ selectedRequest.book?.description || selectedRequest.description }}</p>
+      <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
+      <p><strong>Request Date:</strong> {{ selectedRequest.requestDate }}</p>
+      <p><strong>Return Date:</strong> {{ selectedRequest.returnDate }}</p>
+      <p><strong>Comments:</strong> {{ selectedRequest.comments }}</p>
+      <div *ngIf="selectedRequest.book?.coverImage || selectedRequest.coverImage" class="modal-cover">
+        <strong>Cover Image:</strong>
+        <div class="cover-thumb-box">
+          <img [src]="selectedRequest.book?.coverImage || selectedRequest.coverImage" alt="Book Cover" class="thumb-img" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showDeleteModal">
+  <div class="modal-box">
+    <p class="modal-message">Are you sure you want to delete this rental request?</p>
+    <div class="modal-actions">
+      <button class="btn-danger" (click)="confirmDelete()">Yes, Delete</button>
+      <button class="btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+    </div>
+  </div>
+</div>

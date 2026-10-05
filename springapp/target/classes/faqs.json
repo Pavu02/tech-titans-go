@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "category": "Rental Requests",
+    "question": "How do I rent a book?",
+    "answer": "To rent a book, go to the 'Books' dropdown in the top navbar and click 'View Books'. Find an available book you like and click the green 'Rent' button. Enter your return date and comments, then submit. The admin will review and approve your request."
+  },
+  {
+    "id": 2,
+    "category": "Rental Requests",
+    "question": "How can I check the status of my rental request?",
+    "answer": "You can check the status of your rental request by opening 'Applied Rentals' (or 'My Rentals' from the Books dropdown in the navigation bar). There you will see whether your request is Pending, Approved, or Rejected."
+  },
+  {
+    "id": 3,
+    "category": "Rental Requests",
+    "question": "Can I cancel or delete a book rental request?",
+    "answer": "Yes, navigate to 'My Rentals', locate the rental request you wish to cancel, and click the 'Delete' button. Confirm the deletion to remove your request."
+  },
+  {
+    "id": 4,
+    "category": "Books",
+    "question": "What happens if a book is marked Not Available?",
+    "answer": "When a book is marked 'Not Available' or has already been rented, the 'Rent' button is disabled. It can only be rented once it becomes available again."
+  },
+  {
+    "id": 5,
+    "category": "Books",
+    "question": "How do I search or filter books?",
+    "answer": "On the Available Books page, you can search for books by entering the title, author, or genre in the search bar. Administrators can also filter by genre using the genre dropdown filter."
+  },
+  {
+    "id": 6,
+    "category": "Feedback",
+    "question": "How can I submit feedback about BookHeaven?",
+    "answer": "Hover over the 'Feedback' menu item in the navigation bar and select 'Post Feedback'. Write your thoughts or comments in the feedback text box and click 'Submit'."
+  },
+  {
+    "id": 7,
+    "category": "Feedback",
+    "question": "Where can I view or delete feedback I posted?",
+    "answer": "Hover over 'Feedback' in the navigation bar and select 'My Feedbacks'. You can view all your previously submitted feedback entries and delete any of them if desired."
+  },
+  {
+    "id": 8,
+    "category": "Account",
+    "question": "How do I contact BookHeaven customer support?",
+    "answer": "You can find BookHeaven support contact details on our Home page. If you are contacting them about a rental, please include your rental request ID for faster assistance. Phone: 123-456-7890."
+  },
+  {
+    "id": 9,
+    "category": "Admin",
+    "question": "How do administrators add or edit books?",
+    "answer": "Admins can hover over 'Books' in the navbar and select 'Add Book' to create a new entry with title, author, genre, rental fee, description, and cover image. To modify an existing book, click the 'Edit' button in the Books table."
+  },
+  {
+    "id": 10,
+    "category": "Admin",
+    "question": "How do administrators approve or reject rental requests?",
+    "answer": "Administrators can click 'Rental Requests' in the navbar to see all user requests on the 'Book Rental Requests for Approval' page, then click 'Approve' or 'Reject' to update the status."
+  }
+]
