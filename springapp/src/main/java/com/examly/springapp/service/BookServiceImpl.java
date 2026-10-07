@@ -1,11 +1,11 @@
 package com.examly.springapp.service;
 
+import com.examly.springapp.dto.BookRequestDTO;
 import com.examly.springapp.exceptions.BookDeletionException;
 import com.examly.springapp.exceptions.BookException;
 import com.examly.springapp.model.Book;
 import com.examly.springapp.repository.BookRentalRequestRepo;
 import com.examly.springapp.repository.BookRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -15,17 +15,26 @@ import java.util.Optional;
 @Service
 public class BookServiceImpl implements BookService {
 
-    @Autowired
-    private BookRepo bookRepo;
+    private final BookRepo bookRepo;
+    private final BookRentalRequestRepo rentalRequestRepo;
 
-    @Autowired
-    private BookRentalRequestRepo rentalRequestRepo;
+    // Constructor Injection
+    public BookServiceImpl(BookRepo bookRepo, BookRentalRequestRepo rentalRequestRepo) {
+        this.bookRepo = bookRepo;
+        this.rentalRequestRepo = rentalRequestRepo;
+    }
 
     @Override
-    public Book addBook(Book book) {
-        if (book.getIsAvailable() == null) {
-            book.setIsAvailable(true);
-        }
+    public Book addBook(BookRequestDTO bookDTO) {
+        Book book = new Book();
+        book.setTitle(bookDTO.title());
+        book.setAuthor(bookDTO.author());
+        book.setGenre(bookDTO.genre());
+        book.setDescription(bookDTO.description());
+        book.setRentalFee(bookDTO.rentalFee());
+        book.setIsAvailable(bookDTO.isAvailable() != null ? bookDTO.isAvailable() : true);
+        book.setCoverImage(bookDTO.coverImage());
+        
         return bookRepo.save(book);
     }
 
@@ -40,30 +49,30 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book updateBook(Long bookId, Book updatedBook) {
+    public Book updateBook(Long bookId, BookRequestDTO updatedBookDTO) {
         Book existing = bookRepo.findById(bookId)
                 .orElseThrow(() -> new BookException("Book not found with id: " + bookId));
 
-        if (updatedBook.getTitle() != null) {
-            existing.setTitle(updatedBook.getTitle());
+        if (updatedBookDTO.title() != null) {
+            existing.setTitle(updatedBookDTO.title());
         }
-        if (updatedBook.getAuthor() != null) {
-            existing.setAuthor(updatedBook.getAuthor());
+        if (updatedBookDTO.author() != null) {
+            existing.setAuthor(updatedBookDTO.author());
         }
-        if (updatedBook.getGenre() != null) {
-            existing.setGenre(updatedBook.getGenre());
+        if (updatedBookDTO.genre() != null) {
+            existing.setGenre(updatedBookDTO.genre());
         }
-        if (updatedBook.getDescription() != null) {
-            existing.setDescription(updatedBook.getDescription());
+        if (updatedBookDTO.description() != null) {
+            existing.setDescription(updatedBookDTO.description());
         }
-        if (updatedBook.getRentalFee() != null) {
-            existing.setRentalFee(updatedBook.getRentalFee());
+        if (updatedBookDTO.rentalFee() != null) {
+            existing.setRentalFee(updatedBookDTO.rentalFee());
         }
-        if (updatedBook.getIsAvailable() != null) {
-            existing.setIsAvailable(updatedBook.getIsAvailable());
+        if (updatedBookDTO.isAvailable() != null) {
+            existing.setIsAvailable(updatedBookDTO.isAvailable());
         }
-        if (updatedBook.getCoverImage() != null && !updatedBook.getCoverImage().trim().isEmpty()) {
-            existing.setCoverImage(updatedBook.getCoverImage());
+        if (updatedBookDTO.coverImage() != null && !updatedBookDTO.coverImage().trim().isEmpty()) {
+            existing.setCoverImage(updatedBookDTO.coverImage());
         }
 
         return bookRepo.save(existing);

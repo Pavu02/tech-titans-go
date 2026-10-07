@@ -1,12 +1,12 @@
 package com.examly.springapp.service;
 
+import com.examly.springapp.dto.BookRentalRequestDTO;
 import com.examly.springapp.model.Book;
 import com.examly.springapp.model.BookRentalRequest;
 import com.examly.springapp.model.User;
 import com.examly.springapp.repository.BookRentalRequestRepo;
 import com.examly.springapp.repository.BookRepo;
 import com.examly.springapp.repository.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,14 +17,16 @@ import java.util.Optional;
 @Service
 public class BookRentalRequestServiceImpl implements BookRentalRequestService {
 
-    @Autowired
-    private BookRentalRequestRepo rentalRequestRepo;
+    private final BookRentalRequestRepo rentalRequestRepo;
+    private final UserRepo userRepo;
+    private final BookRepo bookRepo;
 
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private BookRepo bookRepo;
+    // Constructor Injection
+    public BookRentalRequestServiceImpl(BookRentalRequestRepo rentalRequestRepo, UserRepo userRepo, BookRepo bookRepo) {
+        this.rentalRequestRepo = rentalRequestRepo;
+        this.userRepo = userRepo;
+        this.bookRepo = bookRepo;
+    }
 
     @Override
     public List<BookRentalRequest> getAllBookRentalRequests() {
@@ -42,16 +44,18 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
     }
 
     @Override
-    public BookRentalRequest addBookRentalRequest(BookRentalRequest request) {
-        Long userId = request.getUser() != null ? request.getUser().getUserId() : null;
-        Long bookId = request.getBook() != null ? request.getBook().getBookId() : null;
+    public BookRentalRequest addBookRentalRequest(BookRentalRequestDTO requestDTO) {
+        Long userId = (requestDTO.user() != null) ? requestDTO.user().userId() : null;
+        Long bookId = (requestDTO.book() != null) ? requestDTO.book().bookId() : null;
+
+        BookRentalRequest request = new BookRentalRequest();
 
         if (userId != null) {
-            User user = userRepo.findById(userId).orElse(request.getUser());
+            User user = userRepo.findById(userId).orElse(null);
             request.setUser(user);
         }
         if (bookId != null) {
-            Book book = bookRepo.findById(bookId).orElse(request.getBook());
+            Book book = bookRepo.findById(bookId).orElse(null);
             request.setBook(book);
         }
 
@@ -63,38 +67,37 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
             }
         }
 
-        if (request.getRequestDate() == null) {
-            request.setRequestDate(LocalDate.now());
-        }
-        if (request.getReturnDate() != null && request.getReturnDate().isBefore(request.getRequestDate())) {
+        request.setRequestDate(requestDTO.requestDate() != null ? requestDTO.requestDate() : LocalDate.now());
+        
+        if (requestDTO.returnDate() != null && requestDTO.returnDate().isBefore(request.getRequestDate())) {
             throw new IllegalArgumentException("Return date cannot be in the past");
         }
-        if (request.getStatus() == null || request.getStatus().trim().isEmpty()) {
-            request.setStatus("Pending");
-        }
+        request.setReturnDate(requestDTO.returnDate());
+        
+        request.setStatus(requestDTO.status() == null || requestDTO.status().trim().isEmpty() ? "Pending" : requestDTO.status());
+        request.setComments(requestDTO.comments());
 
         return rentalRequestRepo.save(request);
     }
 
     @Override
-    public BookRentalRequest updateBookRentalRequest(Long requestId, BookRentalRequest request) {
-        BookRentalRequest existing = rentalRequestRepo.findById(requestId)
-                .orElse(null);
+    public BookRentalRequest updateBookRentalRequest(Long requestId, BookRentalRequestDTO requestDTO) {
+        BookRentalRequest existing = rentalRequestRepo.findById(requestId).orElse(null);
         if (existing == null) {
             return null;
         }
 
-        if (request.getStatus() != null) {
-            existing.setStatus(request.getStatus());
+        if (requestDTO.status() != null) {
+            existing.setStatus(requestDTO.status());
         }
-        if (request.getReturnDate() != null) {
-            existing.setReturnDate(request.getReturnDate());
+        if (requestDTO.returnDate() != null) {
+            existing.setReturnDate(requestDTO.returnDate());
         }
-        if (request.getComments() != null) {
-            existing.setComments(request.getComments());
+        if (requestDTO.comments() != null) {
+            existing.setComments(requestDTO.comments());
         }
-        if (request.getRequestDate() != null) {
-            existing.setRequestDate(request.getRequestDate());
+        if (requestDTO.requestDate() != null) {
+            existing.setRequestDate(requestDTO.requestDate());
         }
 
         return rentalRequestRepo.save(existing);

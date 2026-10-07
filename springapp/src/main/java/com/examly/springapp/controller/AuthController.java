@@ -1,10 +1,14 @@
 package com.examly.springapp.controller;
 
 import com.examly.springapp.config.JwtUtils;
+import com.examly.springapp.dto.AuthResponse;
+import com.examly.springapp.dto.LoginRequestDTO;
+import com.examly.springapp.dto.RegisterRequestDTO;
+import com.examly.springapp.dto.UserResponseDTO;
 import com.examly.springapp.model.User;
 import com.examly.springapp.repository.UserRepo;
 import com.examly.springapp.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,50 +21,46 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final UserRepo userRepo;
+    private final JwtUtils jwtUtils;
 
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private JwtUtils jwtUtils;
+    // Constructor Injection
+    public AuthController(UserService userService, UserRepo userRepo, JwtUtils jwtUtils) {
+        this.userService = userService;
+        this.userRepo = userRepo;
+        this.jwtUtils = jwtUtils;
+    }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-        if (user.getEmail() == null || user.getPassword() == null ||
-                user.getUsername() == null || user.getMobileNumber() == null || user.getUserRole() == null) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequestDTO registerDTO) {
+        if (userRepo.existsByEmail(registerDTO.email())) {
             Map<String, String> err = new HashMap<>();
-            err.put("message", "All fields are required");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
-        }
-
-        if (userRepo.existsByEmail(user.getEmail())) {
-            Map<String, String> err = new HashMap<>();
-            err.put("message", "User already exists with email: " + user.getEmail());
+            err.put("message", "User already exists with email: " + registerDTO.email());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
         }
 
-        User created = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        User created = userService.createUser(registerDTO);
+        UserResponseDTO response = new UserResponseDTO(
+                created.getUserId(),
+                created.getEmail(),
+                created.getUsername(),
+                created.getMobileNumber(),
+                created.getUserRole()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User loginUser) {
-        if (loginUser.getEmail() == null || loginUser.getPassword() == null) {
-            Map<String, String> err = new HashMap<>();
-            err.put("message", "Email and password are required");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
-        }
-
-        Optional<User> optUser = userRepo.findByEmail(loginUser.getEmail());
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequestDTO loginDTO) {
+        Optional<User> optUser = userRepo.findByEmail(loginDTO.email());
         if (optUser.isEmpty()) {
             Map<String, String> err = new HashMap<>();
             err.put("message", "Invalid Email or Password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
         }
 
-        User user = userService.loginUser(loginUser);
+        User user = userService.loginUser(loginDTO);
         if (user == null) {
             Map<String, String> err = new HashMap<>();
             err.put("message", "Invalid Email or Password");
@@ -69,13 +69,14 @@ public class AuthController {
 
         String token = jwtUtils.generateToken(user.getEmail(), user.getUserRole(), user.getUserId());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", token);
-        response.put("userId", user.getUserId());
-        response.put("email", user.getEmail());
-        response.put("username", user.getUsername());
-        response.put("mobileNumber", user.getMobileNumber());
-        response.put("userRole", user.getUserRole());
+        AuthResponse response = new AuthResponse(
+                token,
+                user.getUserId(),
+                user.getEmail(),
+                user.getUsername(),
+                user.getMobileNumber(),
+                user.getUserRole()
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

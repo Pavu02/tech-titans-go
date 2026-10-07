@@ -1,10 +1,10 @@
 package com.examly.springapp.service;
 
+import com.examly.springapp.dto.FeedbackRequestDTO;
 import com.examly.springapp.model.Feedback;
 import com.examly.springapp.model.User;
 import com.examly.springapp.repository.FeedbackRepo;
 import com.examly.springapp.repository.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,21 +14,26 @@ import java.util.Optional;
 @Service
 public class FeedbackServiceImpl implements FeedbackService {
 
-    @Autowired
-    private FeedbackRepo feedbackRepo;
+    private final FeedbackRepo feedbackRepo;
+    private final UserRepo userRepo;
 
-    @Autowired
-    private UserRepo userRepo;
+    // Constructor Injection
+    public FeedbackServiceImpl(FeedbackRepo feedbackRepo, UserRepo userRepo) {
+        this.feedbackRepo = feedbackRepo;
+        this.userRepo = userRepo;
+    }
 
     @Override
-    public Feedback createFeedback(Feedback feedback) {
-        if (feedback.getUser() != null && feedback.getUser().getUserId() != null) {
-            User user = userRepo.findById(feedback.getUser().getUserId()).orElse(feedback.getUser());
+    public Feedback createFeedback(FeedbackRequestDTO feedbackDTO) {
+        Feedback feedback = new Feedback();
+        feedback.setFeedbackText(feedbackDTO.feedbackText());
+        feedback.setDate(LocalDate.now());
+
+        if (feedbackDTO.user() != null && feedbackDTO.user().userId() != null) {
+            User user = userRepo.findById(feedbackDTO.user().userId()).orElse(null);
             feedback.setUser(user);
         }
-        if (feedback.getDate() == null) {
-            feedback.setDate(LocalDate.now());
-        }
+        
         return feedbackRepo.save(feedback);
     }
 

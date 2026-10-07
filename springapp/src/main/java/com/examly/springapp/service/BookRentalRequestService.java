@@ -1,5 +1,6 @@
 package com.examly.springapp.service;
 
+import com.examly.springapp.dto.BookRentalRequestDTO;
 import com.examly.springapp.model.BookRentalRequest;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface BookRentalRequestService {
     List<BookRentalRequest> getAllBookRentalRequests();
     List<BookRentalRequest> getBookRentalRequestsByUserId(Long userId);
     Optional<BookRentalRequest> getBookRentalRequestById(Long requestId);
-    BookRentalRequest addBookRentalRequest(BookRentalRequest request);
-    BookRentalRequest updateBookRentalRequest(Long requestId, BookRentalRequest request);
+    BookRentalRequest addBookRentalRequest(BookRentalRequestDTO requestDTO);
+    BookRentalRequest updateBookRentalRequest(Long requestId, BookRentalRequestDTO requestDTO);
     boolean deleteBookRentalRequest(Long requestId);
 }

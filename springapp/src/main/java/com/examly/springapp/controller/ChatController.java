@@ -1,31 +1,31 @@
 package com.examly.springapp.controller;
 
+import com.examly.springapp.dto.ChatRequestDTO;
+import com.examly.springapp.dto.ChatResponseDTO;
 import com.examly.springapp.model.ChatMessage;
 import com.examly.springapp.model.FaqEntity;
 import com.examly.springapp.service.ChatService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 public class ChatController {
 
-    @Autowired
-    private ChatService chatService;
+    private final ChatService chatService;
+
+    // Constructor Injection
+    public ChatController(ChatService chatService) {
+        this.chatService = chatService;
+    }
 
     @PostMapping("/chat")
-    public ResponseEntity<?> sendChatMessage(@RequestBody Map<String, String> body) {
-        String message = body.get("message");
-        String sessionId = body.get("sessionId");
-        if (message == null || message.trim().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Message is required"));
-        }
-        Map<String, Object> response = chatService.processChat(message, sessionId);
+    public ResponseEntity<ChatResponseDTO> sendChatMessage(@Valid @RequestBody ChatRequestDTO requestDTO) {
+        ChatResponseDTO response = chatService.processChat(requestDTO.message(), requestDTO.sessionId());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

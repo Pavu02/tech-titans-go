@@ -1,8 +1,9 @@
 package com.examly.springapp.controller;
 
+import com.examly.springapp.dto.FeedbackRequestDTO;
 import com.examly.springapp.model.Feedback;
 import com.examly.springapp.service.FeedbackService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +15,16 @@ import java.util.Optional;
 @RequestMapping("/api/feedback")
 public class FeedbackController {
 
-    @Autowired
-    private FeedbackService feedbackService;
+    private final FeedbackService feedbackService;
+
+    // Constructor Injection
+    public FeedbackController(FeedbackService feedbackService) {
+        this.feedbackService = feedbackService;
+    }
 
     @PostMapping
-    public ResponseEntity<?> createFeedback(@RequestBody Feedback feedback) {
-        if (feedback.getFeedbackText() == null || feedback.getFeedbackText().trim().isEmpty() ||
-            feedback.getUser() == null || feedback.getUser().getUserId() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Feedback text and user are required");
-        }
-
-        Feedback created = feedbackService.createFeedback(feedback);
+    public ResponseEntity<?> createFeedback(@Valid @RequestBody FeedbackRequestDTO feedbackDTO) {
+        Feedback created = feedbackService.createFeedback(feedbackDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 

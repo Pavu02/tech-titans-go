@@ -1,33 +1,43 @@
 package com.examly.springapp.service;
 
+import com.examly.springapp.dto.LoginRequestDTO;
+import com.examly.springapp.dto.RegisterRequestDTO;
 import com.examly.springapp.model.User;
 import com.examly.springapp.repository.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    // Constructor Injection
+    public UserServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder) {
+        this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
-    public User createUser(User user) {
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public User createUser(RegisterRequestDTO registerDTO) {
+        User user = new User();
+        user.setEmail(registerDTO.email());
+        user.setUsername(registerDTO.username());
+        user.setMobileNumber(registerDTO.mobileNumber());
+        user.setUserRole(registerDTO.userRole());
+
+        if (registerDTO.password() != null && !registerDTO.password().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(registerDTO.password()));
         }
         return userRepo.save(user);
     }
 
     @Override
-    public User loginUser(User user) {
-        User existing = userRepo.findByEmail(user.getEmail())
+    public User loginUser(LoginRequestDTO loginDTO) {
+        User existing = userRepo.findByEmail(loginDTO.email())
                 .orElse(null);
-        if (existing != null && passwordEncoder.matches(user.getPassword(), existing.getPassword())) {
+        if (existing != null && passwordEncoder.matches(loginDTO.password(), existing.getPassword())) {
             return existing;
         }
         return null;

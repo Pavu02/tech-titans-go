@@ -1,5 +1,6 @@
 package com.examly.springapp.service;
 
+import com.examly.springapp.dto.ChatResponseDTO;
 import com.examly.springapp.model.ChatMessage;
 import com.examly.springapp.model.FaqEntity;
 import com.examly.springapp.repository.ChatMessageRepo;
@@ -7,7 +8,6 @@ import com.examly.springapp.repository.FaqRepo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -21,14 +21,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class ChatService {
 
-    @Autowired
-    private FaqRepo faqRepo;
-
-    @Autowired
-    private ChatMessageRepo chatMessageRepo;
-
-    @Autowired
-    private ResourceLoader resourceLoader;
+    private final FaqRepo faqRepo;
+    private final ChatMessageRepo chatMessageRepo;
+    private final ResourceLoader resourceLoader;
 
     @Value("${gemini.api.key:}")
     private String geminiApiKey;
@@ -37,6 +32,13 @@ public class ChatService {
     private double lexicalThreshold;
 
     private final Map<String, List<Map<String, String>>> sessionMemory = new ConcurrentHashMap<>();
+
+    // Constructor Injection
+    public ChatService(FaqRepo faqRepo, ChatMessageRepo chatMessageRepo, ResourceLoader resourceLoader) {
+        this.faqRepo = faqRepo;
+        this.chatMessageRepo = chatMessageRepo;
+        this.resourceLoader = resourceLoader;
+    }
 
     @PostConstruct
     public void initFaqs() {
@@ -74,7 +76,7 @@ public class ChatService {
         sessionMemory.remove(sessionId);
     }
 
-    public Map<String, Object> processChat(String message, String sessionId) {
+    public ChatResponseDTO processChat(String message, String sessionId) {
         String trimmed = (message != null) ? message.trim() : "";
         String sid = (sessionId != null && !sessionId.isEmpty()) ? sessionId : "default-session";
 
@@ -133,16 +135,16 @@ public class ChatService {
         );
         chatMessageRepo.save(cm);
 
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("reply", reply);
-        resp.put("matched", matched);
-        resp.put("matchedQuestion", matched && bestFaq != null ? bestFaq.getQuestion() : null);
-        resp.put("category", matched && bestFaq != null ? bestFaq.getCategory() : null);
-        resp.put("confidence", confidence);
-        resp.put("source", source);
-        resp.put("sessionId", sid);
-        resp.put("resolvedQuestion", trimmed);
-        return resp;
+        return new ChatResponseDTO(
+                reply,
+                matched,
+                matched && bestFaq != null ? bestFaq.getQuestion() : null,
+                matched && bestFaq != null ? bestFaq.getCategory() : null,
+                confidence,
+                source,
+                sid,
+                trimmed
+        );
     }
 
     private double jaccardSimilarity(String textA, String textB) {

@@ -1,10 +1,11 @@
 package com.examly.springapp.controller;
 
+import com.examly.springapp.dto.BookRequestDTO;
 import com.examly.springapp.exceptions.BookDeletionException;
 import com.examly.springapp.exceptions.BookException;
 import com.examly.springapp.model.Book;
 import com.examly.springapp.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,20 +17,16 @@ import java.util.Optional;
 @RequestMapping("/api/books")
 public class BookController {
 
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
+
+    // Constructor Injection
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @PostMapping
-    public ResponseEntity<?> addBook(@RequestBody Book book) {
-        if (book.getTitle() == null || book.getTitle().trim().isEmpty() ||
-            book.getAuthor() == null || book.getAuthor().trim().isEmpty() ||
-            book.getGenre() == null || book.getGenre().trim().isEmpty() ||
-            book.getDescription() == null || book.getDescription().trim().isEmpty() ||
-            book.getRentalFee() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("All fields are required");
-        }
-
-        Book savedBook = bookService.addBook(book);
+    public ResponseEntity<?> addBook(@Valid @RequestBody BookRequestDTO bookDTO) {
+        Book savedBook = bookService.addBook(bookDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
     }
 
@@ -50,9 +47,9 @@ public class BookController {
     }
 
     @PutMapping("/{bookId}")
-    public ResponseEntity<?> updateBook(@PathVariable Long bookId, @RequestBody Book updatedBook) {
+    public ResponseEntity<?> updateBook(@PathVariable Long bookId, @RequestBody BookRequestDTO updatedBookDTO) {
         try {
-            Book book = bookService.updateBook(bookId, updatedBook);
+            Book book = bookService.updateBook(bookId, updatedBookDTO);
             return ResponseEntity.status(HttpStatus.OK).body(book);
         } catch (BookException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
