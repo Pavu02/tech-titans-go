@@ -112,3 +112,28 @@
     </div>
   </div>
 </div>
+
+<!-- OTP Verification Modal -->
+<div class="modal-overlay" *ngIf="showOtpModal">
+  <div class="modal-box">
+    <p class="modal-message">An OTP has been sent to your email.</p>
+    
+    <div *ngIf="otpError" class="alert-error" style="margin-bottom: 1rem;">
+      {{ otpError }}
+    </div>
+
+    <input 
+      type="text" 
+      [(ngModel)]="otpValue" 
+      placeholder="Enter 6-digit OTP" 
+      class="form-control" 
+      style="margin-bottom: 1rem; text-align: center; letter-spacing: 2px; font-size: 1.2rem;"
+      maxlength="6"
+    />
+    
+    <div class="modal-actions" style="display: flex; gap: 1rem;">
+      <button class="btn-secondary" (click)="closeOtpModal()">Cancel</button>
+      <button class="btn-primary" (click)="verifyOtpAndRegister()">Verify</button>
+    </div>
+  </div>
+</div>

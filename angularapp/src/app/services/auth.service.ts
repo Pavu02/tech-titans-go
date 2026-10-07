@@ -26,6 +26,10 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  requestOtp(email: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/api/request-otp`, { email });
+  }
+
   register(user: User): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/api/register`, user);
   }

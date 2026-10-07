@@ -12,7 +12,10 @@ export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
   isSubmitted: boolean = false;
   showSuccessModal: boolean = false;
+  showOtpModal: boolean = false;
   errorMessage: string = '';
+  otpValue: string = '';
+  otpError: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -50,20 +53,55 @@ export class SignupComponent implements OnInit {
       return;
     }
 
-    const { confirmPassword, ...userData } = this.signupForm.value;
+    const email = this.signupForm.get('email')?.value;
 
-    this.authService.register(userData).subscribe({
+    this.authService.requestOtp(email).subscribe({
       next: () => {
-        this.showSuccessModal = true;
+        this.showOtpModal = true;
       },
       error: (err) => {
         if (err.status === 409) {
           this.errorMessage = 'User already exists with this email';
+        } else if (err.error && err.error.message) {
+          this.errorMessage = err.error.message;
         } else {
-          this.errorMessage = 'Registration failed. Please try again.';
+          this.errorMessage = 'Failed to send OTP. Please try again.';
         }
       }
     });
+  }
+
+  verifyOtpAndRegister(): void {
+    if (!this.otpValue || this.otpValue.length !== 6) {
+      this.otpError = 'Please enter a valid 6-digit OTP';
+      return;
+    }
+    
+    this.otpError = '';
+    const userData = { ...this.signupForm.value, otp: this.otpValue };
+
+    this.authService.register(userData).subscribe({
+      next: () => {
+        this.showOtpModal = false;
+        this.showSuccessModal = true;
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.otpError = 'Invalid or expired OTP. Please try again.';
+        } else if (err.status === 409) {
+           this.showOtpModal = false;
+           this.errorMessage = 'User already exists with this email/mobile number';
+        } else {
+          this.otpError = 'Registration failed. Please try again.';
+        }
+      }
+    });
+  }
+
+  closeOtpModal(): void {
+    this.showOtpModal = false;
+    this.otpValue = '';
+    this.otpError = '';
   }
 
   onModalOk(): void {

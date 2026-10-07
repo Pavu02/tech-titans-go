@@ -24,12 +24,22 @@ public class AuthController {
     private final UserService userService;
     private final UserRepo userRepo;
     private final JwtUtils jwtUtils;
+    private final com.examly.springapp.service.OtpService otpService;
 
     // Constructor Injection
-    public AuthController(UserService userService, UserRepo userRepo, JwtUtils jwtUtils) {
+    public AuthController(UserService userService, UserRepo userRepo, JwtUtils jwtUtils, com.examly.springapp.service.OtpService otpService) {
         this.userService = userService;
         this.userRepo = userRepo;
         this.jwtUtils = jwtUtils;
+        this.otpService = otpService;
+    }
+
+    @PostMapping("/request-otp")
+    public ResponseEntity<?> requestOtp(@Valid @RequestBody com.examly.springapp.dto.OtpRequestDTO requestDTO) {
+        otpService.generateAndSendOtp(requestDTO.email());
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "OTP sent successfully to " + requestDTO.email());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
@@ -46,6 +56,14 @@ public class AuthController {
             err.put("message", "User already exists with mobile number: " + registerDTO.mobileNumber());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
             // Returns 409
+        }
+
+        if (registerDTO.otp() != null && !registerDTO.otp().isEmpty()) {
+            if (!otpService.validateOtp(registerDTO.email(), registerDTO.otp())) {
+                Map<String, String> err = new HashMap<>();
+                err.put("message", "Invalid or expired OTP");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+            }
         }
 
         User created = userService.createUser(registerDTO);

@@ -1,9 +1,11 @@
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\LoginRequestDTO.java
+C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\OtpRequestDTO.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\controller\FeedbackController.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\service\BookRentalRequestService.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\SpringappApplication.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\config\UserPrinciple.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\service\BookService.java
+C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\repository\OtpTokenRepo.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\exceptions\DuplicateBookException.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\config\JwtUtils.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\repository\UserRepo.java
@@ -12,6 +14,7 @@ C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\repository\BookRentalRequestRepo.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\model\User.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\exceptions\BookDeletionException.java
+C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\service\EmailService.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\config\DataSourceConfig.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\service\UserServiceImpl.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\model\ChatMessage.java
@@ -33,6 +36,7 @@ C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\BookRentalRequestDTO.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\exceptions\BookException.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\model\FaqEntity.java
+C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\model\OtpToken.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\config\JwtAuthenticationEntryPoint.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\ChatRequestDTO.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\UserResponseDTO.java
@@ -40,6 +44,7 @@ C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\config\JwtAuthenticationFilter.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\aspect\LoggingAspect.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\exceptions\GlobalExceptionHandler.java
+C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\service\OtpService.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\config\CorsConfig.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\model\ErrorLog.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\mapper\BookMapper.java
