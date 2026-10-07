@@ -25,6 +25,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(RegisterRequestDTO registerDTO) {
         User user = userMapper.toEntity(registerDTO);
+        
+        if (userRepo.count() == 0) {
+            user.setUserRole("Admin");
+        } else {
+            user.setUserRole("User");
+        }
+        
         return userRepo.save(user);
     }
 

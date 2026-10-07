@@ -93,23 +93,6 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="userRole">Select Role *</label>
-          <select
-            id="userRole"
-            formControlName="userRole"
-            class="form-control"
-            [class.input-error]="isSubmitted && signupForm.get('userRole')?.invalid"
-          >
-            <option value="" disabled selected>Select Role</option>
-            <option value="Admin">Admin</option>
-            <option value="User">User</option>
-          </select>
-          <div *ngIf="isSubmitted && signupForm.get('userRole')?.errors as errors" class="error-text">
-            <span *ngIf="errors['required']">UserRole is required</span>
-          </div>
-        </div>
-
         <button type="submit" class="submit-btn">Signup</button>
       </form>
 

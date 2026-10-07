@@ -20,7 +20,6 @@ public class UserMapper {
         user.setEmail(dto.email());
         user.setUsername(dto.username());
         user.setMobileNumber(dto.mobileNumber());
-        user.setUserRole(dto.userRole());
         
         if (dto.password() != null && !dto.password().isEmpty()) {
             user.setPassword(passwordEncoder.encode(dto.password()));
