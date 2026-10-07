@@ -6,6 +6,7 @@ import com.examly.springapp.service.BookRentalRequestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class BookRentalRequestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addRentalRequest(@RequestBody BookRentalRequestDTO requestDTO) {
+    public ResponseEntity<?> addRentalRequest(@Valid @RequestBody BookRentalRequestDTO requestDTO) {
         try {
             BookRentalRequest created = rentalRequestService.addBookRentalRequest(requestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -63,7 +64,7 @@ public class BookRentalRequestController {
     }
 
     @PutMapping("/{requestId}")
-    public ResponseEntity<?> updateRentalRequest(@PathVariable Long requestId, @RequestBody BookRentalRequestDTO requestDTO) {
+    public ResponseEntity<?> updateRentalRequest(@PathVariable Long requestId, @Valid @RequestBody BookRentalRequestDTO requestDTO) {
         try {
             BookRentalRequest updated = rentalRequestService.updateBookRentalRequest(requestId, requestDTO);
             if (updated != null) {
