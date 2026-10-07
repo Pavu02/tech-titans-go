@@ -5,6 +5,7 @@ import com.examly.springapp.model.Feedback;
 import com.examly.springapp.model.User;
 import com.examly.springapp.repository.FeedbackRepo;
 import com.examly.springapp.repository.UserRepo;
+import com.examly.springapp.mapper.FeedbackMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,24 +17,18 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     private final FeedbackRepo feedbackRepo;
     private final UserRepo userRepo;
+    private final FeedbackMapper feedbackMapper;
 
     // Constructor Injection
-    public FeedbackServiceImpl(FeedbackRepo feedbackRepo, UserRepo userRepo) {
+    public FeedbackServiceImpl(FeedbackRepo feedbackRepo, UserRepo userRepo, FeedbackMapper feedbackMapper) {
         this.feedbackRepo = feedbackRepo;
         this.userRepo = userRepo;
+        this.feedbackMapper = feedbackMapper;
     }
 
     @Override
     public Feedback createFeedback(FeedbackRequestDTO feedbackDTO) {
-        Feedback feedback = new Feedback();
-        feedback.setFeedbackText(feedbackDTO.feedbackText());
-        feedback.setDate(LocalDate.now());
-
-        if (feedbackDTO.user() != null && feedbackDTO.user().userId() != null) {
-            User user = userRepo.findById(feedbackDTO.user().userId()).orElse(null);
-            feedback.setUser(user);
-        }
-        
+        Feedback feedback = feedbackMapper.toEntity(feedbackDTO);
         return feedbackRepo.save(feedback);
     }
 

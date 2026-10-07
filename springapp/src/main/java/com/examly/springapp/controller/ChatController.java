@@ -27,23 +27,27 @@ public class ChatController {
     public ResponseEntity<ChatResponseDTO> sendChatMessage(@Valid @RequestBody ChatRequestDTO requestDTO) {
         ChatResponseDTO response = chatService.processChat(requestDTO.message(), requestDTO.sessionId());
         return ResponseEntity.status(HttpStatus.OK).body(response);
+        // Returns 200
     }
 
     @GetMapping("/chat/history/{sessionId}")
     public ResponseEntity<List<ChatMessage>> getChatHistory(@PathVariable String sessionId) {
         List<ChatMessage> history = chatService.getChatHistory(sessionId);
         return ResponseEntity.status(HttpStatus.OK).body(history);
+        // Returns 200
     }
 
     @DeleteMapping("/chat/memory/{sessionId}")
     public ResponseEntity<Void> clearChatMemory(@PathVariable String sessionId) {
         chatService.clearMemory(sessionId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        // Returns 204
     }
 
     @GetMapping("/faqs")
     public ResponseEntity<List<FaqEntity>> listFaqs() {
         List<FaqEntity> faqs = chatService.getAllFaqs();
         return ResponseEntity.status(HttpStatus.OK).body(faqs);
+        // Returns 200
     }
 }

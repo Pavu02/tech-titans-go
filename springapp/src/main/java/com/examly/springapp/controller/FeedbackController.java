@@ -26,12 +26,14 @@ public class FeedbackController {
     public ResponseEntity<?> createFeedback(@Valid @RequestBody FeedbackRequestDTO feedbackDTO) {
         Feedback created = feedbackService.createFeedback(feedbackDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        // Returns 201
     }
 
     @GetMapping
     public ResponseEntity<List<Feedback>> getAllFeedbacks() {
         List<Feedback> list = feedbackService.getAllFeedbacks();
         return ResponseEntity.status(HttpStatus.OK).body(list);
+        // Returns 200
     }
 
     @GetMapping("/{id}")
@@ -39,8 +41,10 @@ public class FeedbackController {
         Optional<Feedback> fb = feedbackService.getFeedbackById(id);
         if (fb.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(fb.get());
+            // Returns 200
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Feedback not found");
+            // Returns 404
         }
     }
 
@@ -48,6 +52,7 @@ public class FeedbackController {
     public ResponseEntity<?> getFeedbacksByUserId(@PathVariable Long userId) {
         List<Feedback> list = feedbackService.getFeedbacksByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(list);
+        // Returns 200
     }
 
     @DeleteMapping("/{id}")
@@ -55,8 +60,10 @@ public class FeedbackController {
         Feedback deleted = feedbackService.deleteFeedback(id);
         if (deleted != null) {
             return ResponseEntity.status(HttpStatus.OK).body(deleted);
+            // Returns 200
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Feedback not found");
+            // Returns 404
         }
     }
 }

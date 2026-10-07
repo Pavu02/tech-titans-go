@@ -6,6 +6,7 @@ import com.examly.springapp.exceptions.BookException;
 import com.examly.springapp.model.Book;
 import com.examly.springapp.repository.BookRentalRequestRepo;
 import com.examly.springapp.repository.BookRepo;
+import com.examly.springapp.mapper.BookMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -17,24 +18,21 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepo bookRepo;
     private final BookRentalRequestRepo rentalRequestRepo;
+    private final BookMapper bookMapper;
 
     // Constructor Injection
-    public BookServiceImpl(BookRepo bookRepo, BookRentalRequestRepo rentalRequestRepo) {
+    public BookServiceImpl(BookRepo bookRepo, BookRentalRequestRepo rentalRequestRepo, BookMapper bookMapper) {
         this.bookRepo = bookRepo;
         this.rentalRequestRepo = rentalRequestRepo;
+        this.bookMapper = bookMapper;
     }
 
     @Override
     public Book addBook(BookRequestDTO bookDTO) {
-        Book book = new Book();
-        book.setTitle(bookDTO.title());
-        book.setAuthor(bookDTO.author());
-        book.setGenre(bookDTO.genre());
-        book.setDescription(bookDTO.description());
-        book.setRentalFee(bookDTO.rentalFee());
-        book.setIsAvailable(bookDTO.isAvailable() != null ? bookDTO.isAvailable() : true);
-        book.setCoverImage(bookDTO.coverImage());
-        
+        Book book = bookMapper.toEntity(bookDTO);
+        if (book.getIsAvailable() == null) {
+            book.setIsAvailable(true);
+        }
         return bookRepo.save(book);
     }
 
@@ -53,27 +51,7 @@ public class BookServiceImpl implements BookService {
         Book existing = bookRepo.findById(bookId)
                 .orElseThrow(() -> new BookException("Book not found with id: " + bookId));
 
-        if (updatedBookDTO.title() != null) {
-            existing.setTitle(updatedBookDTO.title());
-        }
-        if (updatedBookDTO.author() != null) {
-            existing.setAuthor(updatedBookDTO.author());
-        }
-        if (updatedBookDTO.genre() != null) {
-            existing.setGenre(updatedBookDTO.genre());
-        }
-        if (updatedBookDTO.description() != null) {
-            existing.setDescription(updatedBookDTO.description());
-        }
-        if (updatedBookDTO.rentalFee() != null) {
-            existing.setRentalFee(updatedBookDTO.rentalFee());
-        }
-        if (updatedBookDTO.isAvailable() != null) {
-            existing.setIsAvailable(updatedBookDTO.isAvailable());
-        }
-        if (updatedBookDTO.coverImage() != null && !updatedBookDTO.coverImage().trim().isEmpty()) {
-            existing.setCoverImage(updatedBookDTO.coverImage());
-        }
+        bookMapper.updateEntityFromDto(updatedBookDTO, existing);
 
         return bookRepo.save(existing);
     }

@@ -26,10 +26,13 @@ public class BookRentalRequestController {
         try {
             BookRentalRequest created = rentalRequestService.addBookRentalRequest(requestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
+            // Returns 201
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            // Returns 400
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            // Returns 500
         }
     }
 
@@ -37,12 +40,14 @@ public class BookRentalRequestController {
     public ResponseEntity<List<BookRentalRequest>> getAllRentalRequests() {
         List<BookRentalRequest> list = rentalRequestService.getAllBookRentalRequests();
         return ResponseEntity.status(HttpStatus.OK).body(list);
+        // Returns 200
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<BookRentalRequest>> getRentalRequestsByUserId(@PathVariable Long userId) {
         List<BookRentalRequest> list = rentalRequestService.getBookRentalRequestsByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(list);
+        // Returns 200
     }
 
     @GetMapping("/{requestId}")
@@ -50,8 +55,10 @@ public class BookRentalRequestController {
         Optional<BookRentalRequest> req = rentalRequestService.getBookRentalRequestById(requestId);
         if (req.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(req.get());
+            // Returns 200
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rental request not found");
+            // Returns 404
         }
     }
 
@@ -61,11 +68,14 @@ public class BookRentalRequestController {
             BookRentalRequest updated = rentalRequestService.updateBookRentalRequest(requestId, requestDTO);
             if (updated != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(updated);
+                // Returns 200
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rental request not found");
+                // Returns 404
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            // Returns 500
         }
     }
 
@@ -74,8 +84,10 @@ public class BookRentalRequestController {
         boolean deleted = rentalRequestService.deleteBookRentalRequest(requestId);
         if (deleted) {
             return ResponseEntity.status(HttpStatus.OK).body(true);
+            // Returns 200
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rental request not found");
+            // Returns 404
         }
     }
 }

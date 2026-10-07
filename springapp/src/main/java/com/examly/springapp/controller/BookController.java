@@ -28,6 +28,7 @@ public class BookController {
     public ResponseEntity<?> addBook(@Valid @RequestBody BookRequestDTO bookDTO) {
         Book savedBook = bookService.addBook(bookDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
+        // Returns 201
     }
 
     @GetMapping("/{bookId}")
@@ -35,8 +36,10 @@ public class BookController {
         Optional<Book> book = bookService.getBookById(bookId);
         if (book.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(book.get());
+            // Returns 200
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
+            // Returns 404
         }
     }
 
@@ -44,6 +47,7 @@ public class BookController {
     public ResponseEntity<List<Book>> getAllBooks() {
         List<Book> books = bookService.getAllBooks();
         return ResponseEntity.status(HttpStatus.OK).body(books);
+        // Returns 200
     }
 
     @PutMapping("/{bookId}")
@@ -51,10 +55,13 @@ public class BookController {
         try {
             Book book = bookService.updateBook(bookId, updatedBookDTO);
             return ResponseEntity.status(HttpStatus.OK).body(book);
+            // Returns 200
         } catch (BookException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            // Returns 404
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            // Returns 400
         }
     }
 
@@ -63,12 +70,16 @@ public class BookController {
         try {
             Book deleted = bookService.deleteBook(bookId);
             return ResponseEntity.status(HttpStatus.OK).body(deleted);
+            // Returns 200
         } catch (BookException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            // Returns 404
         } catch (BookDeletionException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            // Returns 400
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            // Returns 500
         }
     }
 }

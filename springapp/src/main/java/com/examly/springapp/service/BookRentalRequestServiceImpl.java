@@ -7,6 +7,7 @@ import com.examly.springapp.model.User;
 import com.examly.springapp.repository.BookRentalRequestRepo;
 import com.examly.springapp.repository.BookRepo;
 import com.examly.springapp.repository.UserRepo;
+import com.examly.springapp.mapper.BookRentalRequestMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,12 +21,15 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
     private final BookRentalRequestRepo rentalRequestRepo;
     private final UserRepo userRepo;
     private final BookRepo bookRepo;
+    private final BookRentalRequestMapper requestMapper;
 
     // Constructor Injection
-    public BookRentalRequestServiceImpl(BookRentalRequestRepo rentalRequestRepo, UserRepo userRepo, BookRepo bookRepo) {
+    public BookRentalRequestServiceImpl(BookRentalRequestRepo rentalRequestRepo, UserRepo userRepo, BookRepo bookRepo,
+            BookRentalRequestMapper requestMapper) {
         this.rentalRequestRepo = rentalRequestRepo;
         this.userRepo = userRepo;
         this.bookRepo = bookRepo;
+        this.requestMapper = requestMapper;
     }
 
     @Override
@@ -48,17 +52,6 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
         Long userId = (requestDTO.user() != null) ? requestDTO.user().userId() : null;
         Long bookId = (requestDTO.book() != null) ? requestDTO.book().bookId() : null;
 
-        BookRentalRequest request = new BookRentalRequest();
-
-        if (userId != null) {
-            User user = userRepo.findById(userId).orElse(null);
-            request.setUser(user);
-        }
-        if (bookId != null) {
-            Book book = bookRepo.findById(bookId).orElse(null);
-            request.setBook(book);
-        }
-
         if (userId != null && bookId != null) {
             boolean exists = rentalRequestRepo.existsByUserUserIdAndBookBookIdAndStatusIn(
                     userId, bookId, Arrays.asList("Pending", "Approved"));
@@ -67,15 +60,11 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
             }
         }
 
-        request.setRequestDate(requestDTO.requestDate() != null ? requestDTO.requestDate() : LocalDate.now());
-        
-        if (requestDTO.returnDate() != null && requestDTO.returnDate().isBefore(request.getRequestDate())) {
+        BookRentalRequest request = requestMapper.toEntity(requestDTO);
+
+        if (request.getReturnDate() != null && request.getReturnDate().isBefore(request.getRequestDate())) {
             throw new IllegalArgumentException("Return date cannot be in the past");
         }
-        request.setReturnDate(requestDTO.returnDate());
-        
-        request.setStatus(requestDTO.status() == null || requestDTO.status().trim().isEmpty() ? "Pending" : requestDTO.status());
-        request.setComments(requestDTO.comments());
 
         return rentalRequestRepo.save(request);
     }
@@ -88,6 +77,16 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
         }
 
         if (requestDTO.status() != null) {
+            if ("Approved".equalsIgnoreCase(requestDTO.status())
+                    && !"Approved".equalsIgnoreCase(existing.getStatus())) {
+                if (existing.getBook() != null) {
+                    boolean alreadyApproved = rentalRequestRepo.existsByBookBookIdAndStatusIn(
+                            existing.getBook().getBookId(), Arrays.asList("Approved"));
+                    if (alreadyApproved) {
+                        throw new IllegalArgumentException("This book has already been approved for another user.");
+                    }
+                }
+            }
             existing.setStatus(requestDTO.status());
         }
         if (requestDTO.returnDate() != null) {
@@ -112,3 +111,13 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
         return false;
     }
 }
+
+// "OK": "200",
+// "CREATED": "201",
+// "NO_CONTENT": "204",
+// "BAD_REQUEST": "400",
+// "UNAUTHORIZED": "401",
+// "FORBIDDEN": "403",
+// "NOT_FOUND": "404",
+// "CONFLICT": "409",
+// "INTERNAL_SERVER_ERROR": "500"

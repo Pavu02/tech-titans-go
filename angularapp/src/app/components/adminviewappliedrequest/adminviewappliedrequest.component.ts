@@ -16,7 +16,7 @@ export class AdminviewappliedrequestComponent implements OnInit {
 
   selectedRequest: BookRentalRequest | null = null;
 
-  constructor(private rentalService: BookrentalrequestService) {}
+  constructor(private rentalService: BookrentalrequestService) { }
 
   ngOnInit(): void {
     this.loadRequests();

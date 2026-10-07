@@ -38,6 +38,14 @@ public class AuthController {
             Map<String, String> err = new HashMap<>();
             err.put("message", "User already exists with email: " + registerDTO.email());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+            // Returns 409
+        }
+
+        if (userRepo.existsByMobileNumber(registerDTO.mobileNumber())) {
+            Map<String, String> err = new HashMap<>();
+            err.put("message", "User already exists with mobile number: " + registerDTO.mobileNumber());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+            // Returns 409
         }
 
         User created = userService.createUser(registerDTO);
@@ -49,6 +57,7 @@ public class AuthController {
                 created.getUserRole()
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        // Returns 201
     }
 
     @PostMapping("/login")
@@ -58,6 +67,7 @@ public class AuthController {
             Map<String, String> err = new HashMap<>();
             err.put("message", "Invalid Email or Password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+            // Returns 401
         }
 
         User user = userService.loginUser(loginDTO);
@@ -65,6 +75,7 @@ public class AuthController {
             Map<String, String> err = new HashMap<>();
             err.put("message", "Invalid Email or Password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+            // Returns 401
         }
 
         String token = jwtUtils.generateToken(user.getEmail(), user.getUserRole(), user.getUserId());
@@ -79,5 +90,6 @@ public class AuthController {
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+        // Returns 200
     }
 }
