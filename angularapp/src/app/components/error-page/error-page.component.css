@@ -1,0 +1,64 @@
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background);
+  background-image: radial-gradient(circle at top right, var(--primary-light), transparent 40%),
+                    radial-gradient(circle at bottom left, var(--soft-mint), transparent 40%);
+  padding: 24px;
+}
+
+.error-content {
+  text-align: center;
+  background: var(--surface);
+  padding: 64px 40px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  max-width: 500px;
+  width: 100%;
+}
+
+.error-illustration {
+  margin-bottom: 32px;
+  position: relative;
+  display: inline-block;
+}
+
+.error-code {
+  font-size: 120px;
+  font-weight: 800;
+  color: var(--primary-light);
+  line-height: 1;
+  text-shadow: 2px 2px 0 var(--primary);
+}
+
+.error-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.error-content h2 {
+  font-size: 24px;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.error-content p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.mt-4 {
+  margin-top: 32px;
+}

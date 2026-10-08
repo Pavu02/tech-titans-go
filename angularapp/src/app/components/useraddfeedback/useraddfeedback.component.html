@@ -1,42 +1,85 @@
 <app-usernav></app-usernav>
 
-<div class="user-feedback-container">
-  <div class="feedback-card">
-    <h2>Add Feedback</h2>
+<div class="view-container form-page">
+  <div class="form-wrapper">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>Submit Feedback</h2>
+        <p>We'd love to hear your thoughts and suggestions.</p>
+      </div>
 
-    <div *ngIf="errorMessage" class="alert-error">
-      {{ errorMessage }}
-    </div>
+      <div *ngIf="errorMessage" class="alert-error">
+        {{ errorMessage }}
+      </div>
 
-    <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="feedbackText">Feedback *</label>
-        <textarea
-          id="feedbackText"
-          rows="6"
-          formControlName="feedbackText"
-          placeholder="Write your feedback here..."
-          class="form-control"
-          [class.input-error]="isSubmitted && feedbackForm.get('feedbackText')?.invalid"
-        ></textarea>
-        <div *ngIf="isSubmitted && feedbackForm.get('feedbackText')?.errors as errors" class="error-text">
-          <span *ngIf="errors['required']">Feedback is required</span>
+      <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label class="form-label" for="rentalId">Select Book Rental</label>
+          <select
+            id="rentalId"
+            formControlName="rentalId"
+            class="form-control"
+            [class.input-error]="isSubmitted && feedbackForm.get('rentalId')?.invalid"
+          >
+            <option value="" disabled selected>Select a returned book</option>
+            <option *ngFor="let req of returnedRentals" [value]="req.rentalId">
+              {{ req.book?.title || req.bookTitle }} (Returned on {{ req.returnDate }})
+            </option>
+          </select>
+          <div *ngIf="isSubmitted && feedbackForm.get('rentalId')?.errors" class="error-text">
+            <span *ngIf="feedbackForm.get('rentalId')?.errors?.['required']">Please select a book rental.</span>
+          </div>
         </div>
-      </div>
 
-      <div class="btn-row">
-        <button type="submit" class="submit-btn">Submit</button>
-      </div>
-    </form>
+        <div class="form-group mt-3">
+          <label class="form-label">Rating</label>
+          <div class="star-rating" [class.input-error-border]="isSubmitted && feedbackForm.get('rating')?.invalid">
+            <span 
+              *ngFor="let star of [1,2,3,4,5]"
+              class="star"
+              [class.filled]="star <= (hoveredRating || feedbackForm.get('rating')?.value)"
+              (mouseenter)="hoveredRating = star"
+              (mouseleave)="hoveredRating = 0"
+              (click)="setRating(star)"
+            >
+              ★
+            </span>
+          </div>
+          <div *ngIf="isSubmitted && feedbackForm.get('rating')?.errors" class="error-text mt-1">
+            <span *ngIf="feedbackForm.get('rating')?.errors?.['required']">Rating is required.</span>
+          </div>
+        </div>
+
+        <div class="form-group mt-3">
+          <label class="form-label" for="feedbackText">Feedback</label>
+          <textarea
+            id="feedbackText"
+            formControlName="feedbackText"
+            rows="6"
+            class="form-control"
+            placeholder="Share your experience..."
+            [class.input-error]="isSubmitted && feedbackForm.get('feedbackText')?.invalid"
+          ></textarea>
+          <div *ngIf="isSubmitted && feedbackForm.get('feedbackText')?.errors" class="error-text">
+            <span *ngIf="feedbackForm.get('feedbackText')?.errors?.['required']">Feedback is required.</span>
+          </div>
+        </div>
+
+        <div class="form-actions mt-4">
+          <button type="submit" class="btn btn-primary w-100">Submit Feedback</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
 <!-- Success Modal -->
 <div class="modal-overlay" *ngIf="showSuccessModal">
   <div class="modal-box">
+    <h3 class="modal-title">Thank You!</h3>
     <p class="modal-message">Successfully Added!</p>
     <div class="modal-actions">
-      <button class="btn-primary" (click)="onModalOk()">Ok</button>
+      <button class="btn btn-primary" (click)="onModalOk()">Ok</button>
     </div>
   </div>
 </div>

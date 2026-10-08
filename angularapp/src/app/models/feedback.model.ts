@@ -9,4 +9,7 @@ export class Feedback {
   userName?: string;
   email?: string;
   mobileNumber?: string;
+  rating?: number;
+  bookRentalRequest?: any;
+  rentalId?: number;
 }

@@ -8,7 +8,13 @@ public record FeedbackRequestDTO(
     String feedbackText,
     
     @NotNull(message = "User object is required")
-    UserRef user
+    UserRef user,
+
+    @NotNull(message = "Rental ID is required")
+    Long rentalId,
+
+    @NotNull(message = "Rating is required")
+    Integer rating
 ) {
     public record UserRef(Long userId) {}
 }

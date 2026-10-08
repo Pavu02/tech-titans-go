@@ -1,36 +1,46 @@
-<nav class="admin-navbar">
-  <div class="nav-brand">
-    <a routerLink="/homePage" class="brand-text">BookHeaven</a>
-  </div>
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a routerLink="/homePage" class="brand-text">BookHeaven</a>
+    </div>
 
-  <div class="nav-middle">
-    <div class="user-badge">{{ username }} / {{ userRole }}</div>
-    <ul class="nav-links">
-      <li><a routerLink="/homePage" routerLinkActive="active">Home</a></li>
-      <li class="dropdown-item" (mouseenter)="toggleBooksDropdown(true)" (mouseleave)="toggleBooksDropdown(false)">
-        <a class="dropdown-trigger">Books ▾</a>
-        <div class="dropdown-menu" *ngIf="showBooksDropdown">
-          <a routerLink="/adminbook" (click)="toggleBooksDropdown(false)">Add Book</a>
-          <a routerLink="/adminviewbook" (click)="toggleBooksDropdown(false)">View Books</a>
+    <div class="nav-menu">
+      <ul class="nav-links">
+        <li><a routerLink="/homePage" routerLinkActive="active">Home</a></li>
+        <li class="dropdown-container" (mouseenter)="toggleBooksDropdown(true)" (mouseleave)="toggleBooksDropdown(false)">
+          <a class="dropdown-trigger" [class.active]="showBooksDropdown">Books <span class="chevron">▾</span></a>
+          <div class="dropdown-menu" *ngIf="showBooksDropdown">
+            <a routerLink="/adminbook" (click)="toggleBooksDropdown(false)">Add Book</a>
+            <a routerLink="/adminviewbook" (click)="toggleBooksDropdown(false)">Manage Books</a>
+          </div>
+        </li>
+        <li><a routerLink="/adminviewappliedrequest" routerLinkActive="active">Requests</a></li>
+        <li><a routerLink="/adminviewfeedback" routerLinkActive="active">Feedback</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-actions">
+      <div class="user-profile">
+        <div class="avatar admin-avatar">{{ username.charAt(0) | uppercase }}</div>
+        <div class="user-details">
+          <span class="user-name">{{ username }}</span>
+          <span class="user-role">{{ userRole }}</span>
         </div>
-      </li>
-      <li><a routerLink="/adminviewappliedrequest" routerLinkActive="active">Rental Requests</a></li>
-      <li><a routerLink="/adminviewfeedback" routerLinkActive="active">Feedbacks</a></li>
-    </ul>
-  </div>
-
-  <div class="nav-right">
-    <button class="logout-btn" (click)="openLogoutModal()">Logout</button>
+      </div>
+      <button class="btn btn-outline btn-sm logout-btn" (click)="openLogoutModal()">Log Out</button>
+    </div>
   </div>
 </nav>
 
 <!-- Logout Confirmation Modal -->
 <div class="modal-overlay" *ngIf="showLogoutModal">
   <div class="modal-box">
-    <p class="modal-message">Are you sure you want to logout?</p>
+    <button class="modal-close-btn" (click)="closeLogoutModal()">×</button>
+    <h3 class="modal-title">Log Out</h3>
+    <p class="modal-message">Are you sure you want to log out?</p>
     <div class="modal-actions">
-      <button class="btn-success" (click)="confirmLogout()">Yes, Logout</button>
-      <button class="btn-danger" (click)="closeLogoutModal()">Cancel</button>
+      <button class="btn btn-outline" (click)="closeLogoutModal()">Cancel</button>
+      <button class="btn btn-danger" (click)="confirmLogout()">Yes, Log Out</button>
     </div>
   </div>
 </div>

@@ -1,10 +1,14 @@
 <app-usernav></app-usernav>
 
 <div class="view-container">
-  <h2 class="page-heading">Available Books</h2>
+  <div class="page-header">
+    <h2 class="page-heading">Available Books</h2>
+    <p class="page-subheading">Browse our catalog and rent your favorite titles.</p>
+  </div>
 
   <div class="filter-bar">
     <div class="search-box">
+      <label class="form-label">Search Catalog</label>
       <input
         id="searchBooks"
         type="text"
@@ -16,63 +20,54 @@
     </div>
   </div>
 
-  <div class="table-responsive" *ngIf="filteredBooks.length > 0; else noRecords">
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>S.No</th>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Genre</th>
-          <th>Rental Fee</th>
-          <th>Description</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let book of filteredBooks; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ book.title }}</td>
-          <td>{{ book.author }}</td>
-          <td>{{ book.genre }}</td>
-          <td>₹{{ book.rentalFee }}</td>
-          <td>{{ book.description }}</td>
-          <td>
-            <span [class.text-available]="book.isAvailable" [class.text-unavailable]="!book.isAvailable">
-              {{ book.isAvailable ? 'Available' : 'Not Available' }}
-            </span>
-          </td>
-          <td class="action-cell">
-            <div class="action-btn-group">
-              <button
-                *ngIf="isRented(book.bookId)"
-                class="btn-primary btn-sm"
-                disabled
-              >
-                Rented
-              </button>
-              <button
-                *ngIf="!isRented(book.bookId)"
-                class="btn-success btn-sm"
-                [disabled]="!book.isAvailable"
-                (click)="onRent(book)"
-              >
-                Rent
-              </button>
-              <button class="btn-warning btn-sm" (click)="showCoverImage(book)">
-                Show Cover Image
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="books-grid" *ngIf="filteredBooks.length > 0; else noRecords">
+    <div class="book-card" *ngFor="let book of filteredBooks">
+      <div class="book-cover" (click)="showCoverImage(book)">
+        <img [src]="book.coverImage || 'assets/images/background.svg'" alt="Book Cover" />
+        <div class="cover-overlay">
+          <span>View Cover</span>
+        </div>
+      </div>
+      <div class="book-details">
+        <div class="book-meta">
+          <span class="genre-tag">{{ book.genre }}</span>
+          <span class="badge" [ngClass]="book.isAvailable ? 'badge-available' : 'badge-unavailable'">
+            {{ book.isAvailable ? 'Available' : 'Unavailable' }}
+          </span>
+        </div>
+        <h3 class="book-title">{{ book.title }}</h3>
+        <p class="book-author">by {{ book.author }}</p>
+        <p class="book-desc">{{ book.description }}</p>
+        <div class="book-footer">
+          <div class="book-fee">
+            <span class="fee-label">Rental Fee</span>
+            <span class="fee-amount">₹{{ book.rentalFee }}</span>
+          </div>
+          <button
+            *ngIf="isRented(book.bookId)"
+            class="btn btn-secondary btn-sm"
+            disabled
+          >
+            Rented
+          </button>
+          <button
+            *ngIf="!isRented(book.bookId)"
+            class="btn btn-primary btn-sm"
+            [disabled]="!book.isAvailable"
+            (click)="onRent(book)"
+          >
+            Rent Now
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <ng-template #noRecords>
     <div class="empty-state">
-      Oops! No records found
+      <div class="empty-icon">📚</div>
+      <h3>No books found</h3>
+      <p>Try adjusting your search criteria.</p>
     </div>
   </ng-template>
 </div>
@@ -80,7 +75,7 @@
 <!-- Cover Image Modal -->
 <div class="modal-overlay" *ngIf="selectedCoverImage">
   <div class="modal-box image-modal">
-    <button class="modal-close-btn" (click)="closeCoverImageModal()">X</button>
+    <button class="modal-close-btn" (click)="closeCoverImageModal()">×</button>
     <div class="cover-image-container">
       <img [src]="selectedCoverImage" alt="Book Cover" class="cover-preview" />
     </div>

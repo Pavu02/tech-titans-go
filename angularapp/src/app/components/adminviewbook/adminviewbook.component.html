@@ -1,31 +1,27 @@
 <app-adminnav></app-adminnav>
 
 <div class="view-container">
-  <h2 class="page-heading">Books</h2>
+  <div class="page-header flex-between">
+    <div>
+      <h2 class="page-heading">Manage Books</h2>
+      <p class="page-subheading">View, search, edit, and manage the library catalog.</p>
+    </div>
+    <button class="btn btn-primary" routerLink="/adminbook">
+      <span class="icon">+</span> Add New Book
+    </button>
+  </div>
 
   <div class="filter-bar">
     <div class="search-box">
-      <label for="searchTitle">Search by: </label>
+      <label class="form-label">Search Books</label>
       <input
-        id="searchTitle"
+        id="searchBooks"
         type="text"
-        placeholder="Book Title..."
+        placeholder="Search by Title, Author, or Genre..."
         [(ngModel)]="searchTerm"
         (input)="onSearchChange()"
-        class="form-control-inline"
+        class="form-control-search"
       />
-    </div>
-
-    <div class="genre-filter">
-      <label for="genreSelect">Filter by: </label>
-      <select
-        id="genreSelect"
-        [(ngModel)]="selectedGenre"
-        (change)="onGenreChange()"
-        class="form-control-inline"
-      >
-        <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
-      </select>
     </div>
   </div>
 
@@ -33,42 +29,36 @@
     <table class="data-table">
       <thead>
         <tr>
-          <th>S.No</th>
           <th>Title</th>
           <th>Author</th>
           <th>Genre</th>
-          <th>Rental Fee</th>
-          <th>Description</th>
+          <th>Fee (₹)</th>
           <th>Status</th>
-          <th>Action</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let book of filteredBooks; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ book.title }}</td>
-          <td>{{ book.author }}</td>
-          <td>{{ book.genre }}</td>
-          <td>₹{{ book.rentalFee }}</td>
-          <td>{{ book.description }}</td>
+        <tr *ngFor="let book of filteredBooks">
           <td>
-            <span [class.text-available]="book.isAvailable" [class.text-unavailable]="!book.isAvailable">
+            <div class="td-title">{{ book.title }}</div>
+          </td>
+          <td>{{ book.author }}</td>
+          <td>
+            <span class="genre-tag">{{ book.genre }}</span>
+          </td>
+          <td>₹{{ book.rentalFee }}</td>
+          <td>
+            <span class="badge" [ngClass]="book.isAvailable ? 'badge-available' : 'badge-unavailable'">
               {{ book.isAvailable ? 'Available' : 'Unavailable' }}
             </span>
           </td>
           <td class="action-cell">
             <div class="action-btn-group">
-              <button class="btn-success btn-sm" (click)="onEdit(book)">Edit</button>
-              <button class="btn-danger btn-sm" (click)="openDeleteModal(book)">Delete</button>
-              <button class="btn-primary btn-sm" (click)="showCoverImage(book)">Show Cover Image</button>
-              <button
-                class="btn-sm"
-                [class.btn-warning]="book.isAvailable"
-                [class.btn-success]="!book.isAvailable"
-                (click)="toggleAvailability(book)"
-              >
+              <button class="btn btn-sm" [ngClass]="book.isAvailable ? 'btn-outline' : 'btn-success'" (click)="toggleAvailability(book)">
                 {{ book.isAvailable ? 'Make Unavailable' : 'Make Available' }}
               </button>
+              <button class="btn btn-outline btn-sm" (click)="onEdit(book)">Edit</button>
+              <button class="btn btn-danger btn-sm" (click)="openDeleteModal(book)">Delete</button>
             </div>
           </td>
         </tr>
@@ -78,28 +68,23 @@
 
   <ng-template #noRecords>
     <div class="empty-state">
-      Oops! No records found
+      <div class="empty-icon">📚</div>
+      <h3>No books found</h3>
+      <p>Your search did not match any books in the catalog.</p>
+      <button class="btn btn-outline mt-3" routerLink="/adminbook">Add a Book</button>
     </div>
   </ng-template>
-</div>
-
-<!-- Cover Image Modal -->
-<div class="modal-overlay" *ngIf="selectedCoverImage">
-  <div class="modal-box image-modal">
-    <button class="modal-close-btn" (click)="closeCoverImageModal()">X</button>
-    <div class="cover-image-container">
-      <img [src]="selectedCoverImage" alt="Book Cover" class="cover-preview" />
-    </div>
-  </div>
 </div>
 
 <!-- Delete Confirmation Modal -->
 <div class="modal-overlay" *ngIf="showDeleteModal">
   <div class="modal-box">
-    <p class="modal-message">Are you sure you want to delete this book?</p>
+    <button class="modal-close-btn" (click)="closeDeleteModal()">×</button>
+    <h3 class="modal-title">Delete Book</h3>
+    <p class="modal-message">Are you sure you want to delete this book? This action cannot be undone.</p>
     <div class="modal-actions">
-      <button class="btn-danger" (click)="confirmDelete()">Yes, Delete</button>
-      <button class="btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-outline" (click)="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger" (click)="confirmDelete()">Yes, Delete</button>
     </div>
   </div>
 </div>

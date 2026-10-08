@@ -1,105 +1,160 @@
-.user-navbar {
+.navbar {
+  background-color: var(--surface);
+  height: 72px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 30px;
-  background: linear-gradient(90deg, #b8621b 0%, #cf8835 35%, #7e2448 80%, #681a3d 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 100;
 }
 
-.brand-text {
-  font-size: 1.5rem;
+.nav-brand .brand-text {
+  font-size: 24px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--primary);
   text-decoration: none;
+  letter-spacing: -0.5px;
 }
 
-.nav-middle {
+.nav-menu {
+  flex-grow: 1;
   display: flex;
-  align-items: center;
-  gap: 25px;
-}
-
-.user-badge {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  padding: 4px 14px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #ffffff;
+  justify-content: center;
 }
 
 .nav-links {
   display: flex;
-  align-items: center;
-  gap: 20px;
+  gap: 32px;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.nav-links a {
-  color: #ffffff;
+.nav-links li a {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 15px;
   text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 400;
+  padding: 8px 0;
+  transition: color 0.2s;
   cursor: pointer;
-  transition: opacity 0.2s;
 }
 
-.nav-links a:hover,
-.nav-links a.active {
-  opacity: 0.85;
-  text-decoration: underline;
+.nav-links li a:hover,
+.nav-links li a.active {
+  color: var(--primary);
 }
 
-.dropdown-item {
+.dropdown-container {
   position: relative;
 }
 
-.dropdown-trigger {
-  user-select: none;
+.chevron {
+  font-size: 12px;
+  margin-left: 4px;
+  transition: transform 0.2s;
+}
+
+.dropdown-container:hover .chevron {
+  transform: rotate(180deg);
 }
 
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 0;
-  background: #ffffff;
-  min-width: 150px;
-  border-radius: 6px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  min-width: 180px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  padding: 8px 0;
   display: flex;
   flex-direction: column;
-  padding: 6px 0;
-  z-index: 101;
+  margin-top: 8px;
 }
 
 .dropdown-menu a {
-  color: #1e293b !important;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  text-decoration: none;
+  padding: 10px 20px !important;
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
 }
 
 .dropdown-menu a:hover {
-  background-color: #f1f5f9;
-  text-decoration: none !important;
+  background-color: var(--soft-mint);
+  color: var(--primary) !important;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.user-role {
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .logout-btn {
-  background-color: #ef4444;
-  color: #ffffff;
-  border: none;
-  padding: 6px 18px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  color: var(--text-secondary);
+  border-color: var(--border);
 }
 
 .logout-btn:hover {
-  background-color: #dc2626;
+  background-color: var(--red);
+  color: #fff;
+  border-color: var(--red);
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    display: none;
+  }
+  .user-details {
+    display: none;
+  }
 }

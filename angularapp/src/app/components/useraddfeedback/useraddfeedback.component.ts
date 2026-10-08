@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FeedbackService } from '../../services/feedback.service';
 import { AuthService } from '../../services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BookrentalrequestService } from '../../services/bookrentalrequest.service';
+import { BookRentalRequest } from '../../models/book-rental-request.model';
 
 @Component({
   selector: 'app-useraddfeedback',
@@ -13,17 +16,49 @@ export class UseraddfeedbackComponent implements OnInit {
   isSubmitted: boolean = false;
   showSuccessModal: boolean = false;
   errorMessage: string = '';
+  rentalId: number | null = null;
+  returnedRentals: BookRentalRequest[] = [];
+  hoveredRating: number = 0;
 
   constructor(
     private fb: FormBuilder,
     private feedbackService: FeedbackService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private rentalService: BookrentalrequestService
   ) {}
 
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
+      rentalId: ['', Validators.required],
+      rating: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
       feedbackText: ['', Validators.required]
     });
+
+    this.route.queryParams.subscribe((params) => {
+      if (params['rentalId']) {
+        this.rentalId = Number(params['rentalId']);
+        this.feedbackForm.patchValue({ rentalId: this.rentalId });
+      }
+    });
+
+    this.loadReturnedRentals();
+  }
+
+  loadReturnedRentals(): void {
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.rentalService.getBookRentalRequestsByUserId(userId).subscribe({
+        next: (data) => {
+          this.returnedRentals = (data || []).filter(req => req.status?.toLowerCase() === 'returned');
+        }
+      });
+    }
+  }
+
+  setRating(val: number): void {
+    this.feedbackForm.patchValue({ rating: val });
   }
 
   onSubmit(): void {
@@ -44,6 +79,8 @@ export class UseraddfeedbackComponent implements OnInit {
     const payload = {
       user: { userId: userId },
       userId: userId,
+      rentalId: Number(this.feedbackForm.value.rentalId),
+      rating: Number(this.feedbackForm.value.rating),
       feedbackText: this.feedbackForm.value.feedbackText,
       date: todayStr
     };
@@ -62,5 +99,6 @@ export class UseraddfeedbackComponent implements OnInit {
 
   onModalOk(): void {
     this.showSuccessModal = false;
+    this.router.navigate(['/userviewappliedrequest']);
   }
 }

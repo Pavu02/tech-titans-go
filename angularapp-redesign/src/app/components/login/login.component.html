@@ -1,0 +1,57 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-banner">
+      <div class="banner-overlay">
+        <h1>BookHeaven</h1>
+      </div>
+    </div>
+
+    <div class="auth-form-section">
+      <h2>Login</h2>
+
+      <div *ngIf="errorMessage" class="alert-error">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="Enter your email"
+            class="form-control"
+            [class.input-error]="isSubmitted && loginForm.get('email')?.invalid"
+          />
+          <div *ngIf="isSubmitted && loginForm.get('email')?.errors as errors" class="error-text">
+            <span *ngIf="errors['required']">Email is required</span>
+            <span *ngIf="errors['pattern']">Please enter a valid email</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Enter your password"
+            class="form-control"
+            [class.input-error]="isSubmitted && loginForm.get('password')?.invalid"
+          />
+          <div *ngIf="isSubmitted && loginForm.get('password')?.errors as errors" class="error-text">
+            <span *ngIf="errors['required']">Password is required</span>
+            <span *ngIf="errors['minlength']">Password must be at least 6 characters</span>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Login</button>
+      </form>
+
+      <p class="switch-auth">
+        Don't have an account? <a routerLink="/signup">Signup</a>
+      </p>
+    </div>
+  </div>
+</div>

@@ -22,14 +22,23 @@ public class Feedback {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "rentalId", nullable = false)
+    private BookRentalRequest bookRentalRequest;
+
+    @Column(nullable = false)
+    private Integer rating;
+
     public Feedback() {
     }
 
-    public Feedback(Long feedbackId, String feedbackText, LocalDate date, User user) {
+    public Feedback(Long feedbackId, String feedbackText, LocalDate date, User user, BookRentalRequest bookRentalRequest, Integer rating) {
         this.feedbackId = feedbackId;
         this.feedbackText = feedbackText;
         this.date = date;
         this.user = user;
+        this.bookRentalRequest = bookRentalRequest;
+        this.rating = rating;
     }
 
     public Long getFeedbackId() {
@@ -62,5 +71,21 @@ public class Feedback {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public BookRentalRequest getBookRentalRequest() {
+        return bookRentalRequest;
+    }
+
+    public void setBookRentalRequest(BookRentalRequest bookRentalRequest) {
+        this.bookRentalRequest = bookRentalRequest;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 }

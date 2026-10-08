@@ -1,32 +1,37 @@
 <app-usernav></app-usernav>
 
 <div class="view-container">
-  <h2 class="page-heading">My Feedback</h2>
+  <div class="page-header">
+    <h2 class="page-heading">My Feedback</h2>
+    <p class="page-subheading">View and manage your submitted feedback.</p>
+  </div>
 
-  <div class="table-responsive" *ngIf="feedbacks.length > 0; else noData">
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>S.No</th>
-          <th>Feedback</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let fb of feedbacks; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ fb.feedbackText }}</td>
-          <td class="action-cell">
-            <button class="btn-danger btn-sm" (click)="openDeleteModal(fb)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="feedback-grid" *ngIf="feedbacks.length > 0; else noData">
+    <div class="feedback-card" *ngFor="let fb of feedbacks; let i = index">
+      <div class="card-header">
+        <div class="rating-section">
+          <span class="text-muted mr-2">#{{ i + 1 }}</span>
+          <div class="star-rating-display">
+            <span *ngFor="let star of [1, 2, 3, 4, 5]" class="star" [class.filled]="star <= (fb.rating || 0)">★</span>
+          </div>
+        </div>
+        <button class="btn btn-danger btn-sm" (click)="openDeleteModal(fb)">Delete</button>
+      </div>
+      <div class="card-body">
+        <div class="book-info" *ngIf="fb.bookRentalRequest?.book?.title">
+          <span class="book-icon">📖</span> <span class="book-title">{{ fb.bookRentalRequest.book.title }}</span>
+        </div>
+        <p class="feedback-text">{{ fb.feedbackText }}</p>
+      </div>
+    </div>
   </div>
 
   <ng-template #noData>
     <div class="empty-state">
-      Oops! No records found
+      <div class="empty-icon">💬</div>
+      <h3>No feedback found</h3>
+      <p>You haven't submitted any feedback yet.</p>
+      <a routerLink="/useraddfeedback" class="btn btn-outline mt-3">Add Feedback</a>
     </div>
   </ng-template>
 </div>
@@ -34,10 +39,12 @@
 <!-- Delete Confirmation Modal -->
 <div class="modal-overlay" *ngIf="showDeleteModal">
   <div class="modal-box">
-    <p class="modal-message">Are you sure you want to delete?</p>
+    <button class="modal-close-btn" (click)="closeDeleteModal()">×</button>
+    <h3 class="modal-title">Delete Feedback</h3>
+    <p class="modal-message">Are you sure you want to delete this feedback? This action cannot be undone.</p>
     <div class="modal-actions">
-      <button class="btn-danger" (click)="confirmDelete()">Yes, Delete</button>
-      <button class="btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-outline" (click)="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger" (click)="confirmDelete()">Yes, Delete</button>
     </div>
   </div>
 </div>

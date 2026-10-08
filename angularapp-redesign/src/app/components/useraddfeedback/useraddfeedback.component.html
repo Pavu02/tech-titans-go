@@ -1,0 +1,42 @@
+<app-usernav></app-usernav>
+
+<div class="user-feedback-container">
+  <div class="feedback-card">
+    <h2>Add Feedback</h2>
+
+    <div *ngIf="errorMessage" class="alert-error">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="feedbackText">Feedback *</label>
+        <textarea
+          id="feedbackText"
+          rows="6"
+          formControlName="feedbackText"
+          placeholder="Write your feedback here..."
+          class="form-control"
+          [class.input-error]="isSubmitted && feedbackForm.get('feedbackText')?.invalid"
+        ></textarea>
+        <div *ngIf="isSubmitted && feedbackForm.get('feedbackText')?.errors as errors" class="error-text">
+          <span *ngIf="errors['required']">Feedback is required</span>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="submit-btn">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" *ngIf="showSuccessModal">
+  <div class="modal-box">
+    <p class="modal-message">Successfully Added!</p>
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="onModalOk()">Ok</button>
+    </div>
+  </div>
+</div>

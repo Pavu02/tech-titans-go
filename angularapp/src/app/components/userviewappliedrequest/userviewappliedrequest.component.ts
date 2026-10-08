@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BookRentalRequest } from '../../models/book-rental-request.model';
 import { BookrentalrequestService } from '../../services/bookrentalrequest.service';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-userviewappliedrequest',
@@ -19,7 +20,8 @@ export class UserviewappliedrequestComponent implements OnInit {
 
   constructor(
     private rentalService: BookrentalrequestService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +60,10 @@ export class UserviewappliedrequestComponent implements OnInit {
 
   onSearchChange(): void {
     this.applyFilter();
+  }
+
+  giveFeedback(req: BookRentalRequest): void {
+    this.router.navigate(['/useraddfeedback'], { queryParams: { rentalId: req.rentalId } });
   }
 
   showMore(req: BookRentalRequest): void {

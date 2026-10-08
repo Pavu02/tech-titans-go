@@ -82,7 +82,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/register", "/api/login", "/api/request-otp").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/books").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/books", "/api/stats").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/books").hasAnyAuthority("Admin", "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/books/**").hasAnyAuthority("Admin", "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasAnyAuthority("Admin", "ROLE_ADMIN")

@@ -8,6 +8,7 @@ C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\repository\OtpTokenRepo.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\exceptions\DuplicateBookException.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\config\JwtUtils.java
+C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\controller\StatsController.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\repository\UserRepo.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\model\BookRentalRequest.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\FeedbackResponseDTO.java

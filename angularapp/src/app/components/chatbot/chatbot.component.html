@@ -1,54 +1,50 @@
-<!-- Floating Launcher Button -->
-<div class="chatbot-floating-btn" *ngIf="!isOpen" (click)="toggleChat()">
-  <span class="chat-icon">💬</span>
-</div>
+<div class="chatbot-container" [class.open]="isOpen">
+  <!-- Trigger Button -->
+  <button class="chat-trigger" (click)="toggleChat()" *ngIf="!isOpen">
+    <span class="chat-icon">💬</span>
+  </button>
 
-<!-- Chat Window Widget -->
-<div class="chatbot-window" *ngIf="isOpen">
-  <div class="chat-header">
-    <div class="header-info">
-      <h4>BookHeaven Assistant</h4>
-      <span class="sub-text">Powered by Gemini / FAQ semantic search</span>
+  <!-- Chat Window -->
+  <div class="chat-window" *ngIf="isOpen">
+    <div class="chat-header">
+      <div class="header-info">
+        <h3>BookHeaven Assistant</h3>
+        <span class="status-indicator"></span>
+      </div>
+      <div class="header-actions">
+        <button class="clear-btn" (click)="clearChat()">Clear</button>
+        <button class="close-btn" (click)="toggleChat()">×</button>
+      </div>
     </div>
-    <div class="header-actions">
-      <button class="clear-btn" (click)="clearChat()">Clear</button>
-      <button class="close-btn" (click)="toggleChat()">✕</button>
-    </div>
-  </div>
 
-  <div class="chat-body">
-    <div
-      *ngFor="let msg of messages"
-      class="message-row"
-      [class.user-row]="msg.sender === 'user'"
-      [class.bot-row]="msg.sender === 'bot'"
-    >
-      <div class="bubble" [class.user-bubble]="msg.sender === 'user'" [class.bot-bubble]="msg.sender === 'bot'">
-        <p>{{ msg.text }}</p>
-        <div class="meta-row" *ngIf="msg.matchedQuestion || msg.time">
-          <span *ngIf="msg.matchedQuestion" class="matched-badge">
-            FAQ: {{ msg.matchedQuestion }}
-          </span>
-          <span *ngIf="msg.time" class="timestamp">{{ msg.time }}</span>
+    <div class="chat-messages" #scrollContainer>
+      <div class="message" *ngFor="let msg of messages" [ngClass]="msg.sender === 'user' ? 'message-user' : 'message-bot'">
+        <div class="message-bubble">
+          <p>{{ msg.text }}</p>
+          <div class="meta-row" *ngIf="msg.matchedQuestion || msg.time">
+            <span *ngIf="msg.matchedQuestion" class="matched-badge">FAQ: {{ msg.matchedQuestion }}</span>
+            <span *ngIf="msg.time" class="timestamp">{{ msg.time }}</span>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div *ngIf="isLoading" class="message-row bot-row">
-      <div class="bubble bot-bubble typing">
-        <span>Thinking...</span>
+      
+      <div class="message message-bot" *ngIf="isLoading">
+        <div class="message-bubble typing">Thinking...</div>
       </div>
     </div>
-  </div>
 
-  <div class="chat-footer">
-    <input
-      type="text"
-      placeholder="Type your question..."
-      [(ngModel)]="userQuery"
-      (keyup.enter)="sendMessage()"
-      class="chat-input"
-    />
-    <button class="send-btn" (click)="sendMessage()" [disabled]="isLoading">➤</button>
+    <div class="chat-input-area">
+      <input 
+        type="text" 
+        [(ngModel)]="userQuery" 
+        (keyup.enter)="sendMessage()" 
+        placeholder="Type your question..." 
+        class="chat-input"
+        [disabled]="isLoading"
+      />
+      <button class="send-btn" (click)="sendMessage()" [disabled]="isLoading || !userQuery?.trim()">
+        <span>➤</span>
+      </button>
+    </div>
   </div>
 </div>

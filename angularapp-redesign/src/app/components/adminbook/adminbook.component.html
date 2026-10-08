@@ -1,0 +1,119 @@
+<app-adminnav></app-adminnav>
+
+<div class="admin-book-container">
+  <div class="header-action-row" *ngIf="isEditMode">
+    <button class="back-btn" (click)="goBack()">Back</button>
+  </div>
+
+  <div class="book-card">
+    <h2>{{ isEditMode ? 'Edit Book' : 'Create New Book' }}</h2>
+
+    <div *ngIf="generalErrorMessage" class="alert-error">
+      {{ generalErrorMessage }}
+    </div>
+
+    <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="title">Book Title *</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="Enter book title"
+          class="form-control"
+          [class.input-error]="isSubmitted && bookForm.get('title')?.invalid"
+        />
+        <div *ngIf="isSubmitted && bookForm.get('title')?.errors as errors" class="error-text">
+          <span *ngIf="errors['required']">Book Title is required</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="author">Author *</label>
+        <input
+          id="author"
+          type="text"
+          formControlName="author"
+          placeholder="Enter author name"
+          class="form-control"
+          [class.input-error]="isSubmitted && bookForm.get('author')?.invalid"
+        />
+        <div *ngIf="isSubmitted && bookForm.get('author')?.errors as errors" class="error-text">
+          <span *ngIf="errors['required']">Author is required</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="genre">Genre *</label>
+        <input
+          id="genre"
+          type="text"
+          formControlName="genre"
+          placeholder="Enter genre"
+          class="form-control"
+          [class.input-error]="isSubmitted && bookForm.get('genre')?.invalid"
+        />
+        <div *ngIf="isSubmitted && bookForm.get('genre')?.errors as errors" class="error-text">
+          <span *ngIf="errors['required']">Genre is required</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea
+          id="description"
+          rows="4"
+          formControlName="description"
+          placeholder="Enter book description"
+          class="form-control"
+          [class.input-error]="isSubmitted && bookForm.get('description')?.invalid"
+        ></textarea>
+        <div *ngIf="isSubmitted && bookForm.get('description')?.errors as errors" class="error-text">
+          <span *ngIf="errors['required']">Description is required</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="rentalFee">Rental Fee *</label>
+        <input
+          id="rentalFee"
+          type="number"
+          formControlName="rentalFee"
+          placeholder="Enter rental fee"
+          class="form-control"
+          [class.input-error]="isSubmitted && bookForm.get('rentalFee')?.invalid"
+        />
+        <div *ngIf="isSubmitted && bookForm.get('rentalFee')?.errors as errors" class="error-text">
+          <span *ngIf="errors['required']">Rental Fee is required</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="coverImage">Cover Image</label>
+        <input
+          id="coverImage"
+          type="file"
+          accept="image/*"
+          (change)="onFileChange($event)"
+          class="form-control file-input"
+        />
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="action-btn">
+          {{ isEditMode ? 'Update Book' : 'Add Book' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" *ngIf="showSuccessModal">
+  <div class="modal-box">
+    <p class="modal-message">{{ successMessage }}</p>
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="onModalOk()">Ok</button>
+    </div>
+  </div>
+</div>

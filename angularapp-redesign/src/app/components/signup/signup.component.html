@@ -1,0 +1,114 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-banner">
+      <div class="banner-overlay">
+        <h1>BookHeaven</h1>
+      </div>
+    </div>
+
+    <div class="auth-form-section">
+      <h2>Signup</h2>
+
+      <div *ngIf="errorMessage" class="alert-error">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="username">Username *</label>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            placeholder="Enter username"
+            class="form-control"
+            [class.input-error]="isSubmitted && signupForm.get('username')?.invalid"
+          />
+          <div *ngIf="isSubmitted && signupForm.get('username')?.errors as errors" class="error-text">
+            <span *ngIf="errors['required']">Username is required</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="Enter email"
+            class="form-control"
+            [class.input-error]="isSubmitted && signupForm.get('email')?.invalid"
+          />
+          <div *ngIf="isSubmitted && signupForm.get('email')?.errors as errors" class="error-text">
+            <span *ngIf="errors['required']">Email is required</span>
+            <span *ngIf="errors['pattern']">Please enter a valid email</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="mobile">Mobile *</label>
+          <input
+            id="mobile"
+            type="text"
+            formControlName="mobileNumber"
+            placeholder="Enter mobile number"
+            class="form-control"
+            [class.input-error]="isSubmitted && signupForm.get('mobileNumber')?.invalid"
+          />
+          <div *ngIf="isSubmitted && signupForm.get('mobileNumber')?.errors as errors" class="error-text">
+            <span *ngIf="errors['required']">MobileNumber is required</span>
+            <span *ngIf="errors['pattern']">Mobile number must be 10 digits</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password *</label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Enter password"
+            class="form-control"
+            [class.input-error]="isSubmitted && signupForm.get('password')?.invalid"
+          />
+          <div *ngIf="isSubmitted && signupForm.get('password')?.errors as errors" class="error-text">
+            <span *ngIf="errors['required']">Password is required</span>
+            <span *ngIf="errors['minlength']">Password must be at least 6 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password *</label>
+          <input
+            id="confirmPassword"
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="Confirm password"
+            class="form-control"
+            [class.input-error]="isSubmitted && (signupForm.get('confirmPassword')?.invalid || signupForm.errors?.['passwordMismatch'])"
+          />
+          <div *ngIf="isSubmitted" class="error-text">
+            <span *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">Confirm Password is required</span>
+            <span *ngIf="!signupForm.get('confirmPassword')?.errors?.['required'] && signupForm.errors?.['passwordMismatch']">Passwords do not match</span>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Signup</button>
+      </form>
+
+      <p class="switch-auth">
+        Already have an account? <a routerLink="/login">Login</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Registration Success Modal -->
+<div class="modal-overlay" *ngIf="showSuccessModal">
+  <div class="modal-box">
+    <p class="modal-message">User Registration is Successful!</p>
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="onModalOk()">Ok</button>
+    </div>
+  </div>
+</div>

@@ -18,5 +18,11 @@ public record FeedbackResponseDTO(
     Long userId,
 
     @NotBlank(message = "Username is required")
-    String username
+    String username,
+
+    @NotNull(message = "Rental ID is required")
+    Long rentalId,
+
+    @NotNull(message = "Rating is required")
+    Integer rating
 ) {}

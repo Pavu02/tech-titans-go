@@ -1,0 +1,3 @@
+.admin-book-container .header-action-row { width: min(680px,100%); display:flex; justify-content:flex-end; margin-bottom:12px; }
+.admin-book-container .book-card { position:relative; }
+.admin-book-container .book-card::before { content:'LIBRARY MANAGEMENT'; display:block; margin-bottom:7px; color:#667085; font-size:.68rem; font-weight:800; letter-spacing:.14em; text-align:center; }

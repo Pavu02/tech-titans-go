@@ -1,58 +1,60 @@
 <app-usernav></app-usernav>
 
-<div class="user-request-container">
-  <div class="header-action-row">
-    <button class="back-btn" (click)="goBack()">Back</button>
-  </div>
+<div class="view-container form-page">
+  <div class="form-wrapper">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>Rent a Book</h2>
+        <p>Please provide the details for your rental request.</p>
+      </div>
 
-  <div class="request-card">
-    <h2>Book Rental Request Form</h2>
+      <div *ngIf="generalErrorMessage" class="alert-error">
+        {{ generalErrorMessage }}
+      </div>
 
-    <div *ngIf="generalErrorMessage" class="alert-error">
-      {{ generalErrorMessage }}
-    </div>
-
-    <form [formGroup]="rentalForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="returnDate">Return Date *</label>
-        <input
-          id="returnDate"
-          type="date"
-          [min]="minDate"
-          formControlName="returnDate"
-          class="form-control"
-          [class.input-error]="isSubmitted && rentalForm.get('returnDate')?.invalid"
-        />
-        <div *ngIf="isSubmitted && rentalForm.get('returnDate')?.errors as errors" class="error-text">
-          <span *ngIf="errors['required']">Return date is required</span>
-          <span *ngIf="errors['pastDate']">Return date cannot be in the past</span>
+      <form [formGroup]="rentalForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label class="form-label" for="returnDate">Return Date</label>
+          <input
+            id="returnDate"
+            type="date"
+            formControlName="returnDate"
+            class="form-control"
+            [class.input-error]="rentalForm.get('returnDate')?.invalid && rentalForm.get('returnDate')?.touched"
+          />
+          <div *ngIf="rentalForm.get('returnDate')?.invalid && rentalForm.get('returnDate')?.touched" class="error-text">
+            <span *ngIf="rentalForm.get('returnDate')?.hasError('required')">Return Date is required.</span>
+            <span *ngIf="rentalForm.get('returnDate')?.hasError('pastDate')">Return Date cannot be in the past.</span>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="comments">Comments</label>
-        <textarea
-          id="comments"
-          rows="4"
-          formControlName="comments"
-          placeholder="Enter comments"
-          class="form-control"
-        ></textarea>
-      </div>
+        <div class="form-group">
+          <label class="form-label" for="comments">Comments (Optional)</label>
+          <textarea
+            id="comments"
+            formControlName="comments"
+            rows="3"
+            class="form-control"
+            placeholder="Any special instructions..."
+          ></textarea>
+        </div>
 
-      <div class="btn-row">
-        <button type="submit" class="submit-btn">Submit</button>
-      </div>
-    </form>
+        <div class="form-actions mt-4">
+          <button type="button" class="btn btn-outline" (click)="goBack()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!rentalForm.valid">Submit Request</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
 <!-- Success Modal -->
 <div class="modal-overlay" *ngIf="showSuccessModal">
   <div class="modal-box">
-    <p class="modal-message">Successfully Submitted!</p>
+    <h3 class="modal-title">Success</h3>
+    <p class="modal-message">Rental request submitted successfully!</p>
     <div class="modal-actions">
-      <button class="btn-primary" (click)="onModalOk()">Ok</button>
+      <button class="btn btn-primary" (click)="onModalOk()">OK</button>
     </div>
   </div>
 </div>

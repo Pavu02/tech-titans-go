@@ -1,0 +1,88 @@
+=============================================================
+             BOOKHEAVEN: PROJECT ARCHITECTURE & FLOW
+=============================================================
+
+This document provides a detailed end-to-end flow of the Book Management 
+and Rental System (BookHeaven).
+
+-------------------------------------------------------------
+1. SYSTEM ARCHITECTURE
+-------------------------------------------------------------
+- Frontend: Angular (Single Page Application)
+- Backend: Spring Boot (RESTful API)
+- Database: H2 In-Memory Database (accessed via Spring Data JPA)
+- Security: Spring Security with JWT (JSON Web Tokens)
+- Email/SMTP: Spring Boot Mail (configured with Gmail SMTP)
+
+-------------------------------------------------------------
+2. USER REGISTRATION & OTP VERIFICATION FLOW
+-------------------------------------------------------------
+Step 1: User Input
+  - The user visits the /signup page.
+  - The user fills out their details: Username, Email, Mobile, Password.
+  - The user clicks the "Signup" button.
+
+Step 2: OTP Generation
+  - The Angular app sends a POST request to `/api/request-otp` with the email.
+  - Spring Boot receives the request in `AuthController`.
+  - `OtpService` generates a random 6-digit number.
+  - The OTP is saved in the `otp_tokens` table in the H2 Database, linked to the email and an expiration timestamp (e.g., 5 minutes).
+
+Step 3: Email Dispatch
+  - `EmailService` uses `JavaMailSendwder` to send an email to the user.
+  - The email contains the 6-digit OTP code.
+
+Step 4: Verification & Registration
+  - A modal pops up on the frontend asking the user to enter the OTP.
+  - The user types the code and submits.
+  - Angular sends a POST request to `/api/register` containing the User Data + OTP.
+  - `AuthController` validates the OTP via `OtpService` (checks if it exists, matches, and is not expired).
+  - If valid, `UserService` encrypts the password and saves the User to the `users` table.
+
+-------------------------------------------------------------
+3. LOGIN & AUTHENTICATION FLOW
+-------------------------------------------------------------
+Step 1: User Login
+  - The user goes to the /login page, enters their email and password.
+  - Angular sends a POST request to `/api/login`.
+
+Step 2: Token Generation
+  - `AuthController` verifies the credentials against the database.
+  - If valid, `JwtUtils` generates a JWT token containing the user's ID, Email, and Role (User or Admin).
+  
+Step 3: Session Management
+  - The backend returns the JWT token to the frontend.
+  - Angular's `AuthService` stores the token, Role, and ID in `localStorage`.
+  - The user is redirected to `/homePage` (User) or Admin dashboard (Admin).
+  - For all subsequent requests, Angular attaches the JWT token to the `Authorization` header.
+
+-------------------------------------------------------------
+4. BOOK RENTAL WORKFLOW (USER -> ADMIN)
+-------------------------------------------------------------
+Step 1: Browsing
+  - The User views available books on the `/userviewbooks` page.
+  - Angular fetches books via `GET /api/books`.
+
+Step 2: Renting a Book
+  - The User clicks "Rent" on a specific book.
+  - A modal prompts the user to enter the rental duration (days).
+  - Angular sends a POST request to `/api/bookrentalrequest` with the Book ID, User ID, and rental period.
+  - The DB creates a `BookRentalRequest` record with status "PENDING".
+
+Step 3: Admin Approval
+  - The Admin logs in and navigates to the "Rental Requests" page.
+  - The Admin clicks "Approve" or "Reject".
+  - Angular sends a PUT request to `/api/bookrentalrequest/{id}` updating the status.
+  - If approved, the book's availability might be updated accordingly.
+
+-------------------------------------------------------------
+5. FEEDBACK WORKFLOW
+-------------------------------------------------------------
+- Users can go to the "Post Feedback" page to leave comments.
+- Angular sends a POST request to `/api/feedback`.
+- Feedback is stored in the `feedbacks` table.
+- Admins can view all feedback on the `/adminviewfeedback` page via `GET /api/feedback`.
+
+=============================================================
+END OF DOCUMENT
+=============================================================

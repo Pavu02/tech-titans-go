@@ -1,41 +1,51 @@
-<nav class="user-navbar">
-  <div class="nav-brand">
-    <a routerLink="/homePage" class="brand-text">BookHeaven</a>
-  </div>
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a routerLink="/homePage" class="brand-text">BookHeaven</a>
+    </div>
 
-  <div class="nav-middle">
-    <div class="user-badge">{{ username }} / {{ userRole }}</div>
-    <ul class="nav-links">
-      <li><a routerLink="/homePage" routerLinkActive="active">Home</a></li>
-      <li class="dropdown-item" (mouseenter)="toggleBooksDropdown(true)" (mouseleave)="toggleBooksDropdown(false)">
-        <a class="dropdown-trigger">Books ▾</a>
-        <div class="dropdown-menu" *ngIf="showBooksDropdown">
-          <a routerLink="/userviewbooks" (click)="toggleBooksDropdown(false)">View Books</a>
-          <a routerLink="/userviewappliedrequest" (click)="toggleBooksDropdown(false)">My Rentals</a>
-        </div>
-      </li>
-      <li class="dropdown-item" (mouseenter)="toggleFeedbackDropdown(true)" (mouseleave)="toggleFeedbackDropdown(false)">
-        <a class="dropdown-trigger">Feedback ▾</a>
-        <div class="dropdown-menu" *ngIf="showFeedbackDropdown">
-          <a routerLink="/useraddfeedback" (click)="toggleFeedbackDropdown(false)">Post Feedback</a>
-          <a routerLink="/userviewfeedback" (click)="toggleFeedbackDropdown(false)">My Feedbacks</a>
-        </div>
-      </li>
-    </ul>
-  </div>
+    <div class="nav-menu">
+      <ul class="nav-links">
+        <li><a routerLink="/homePage" routerLinkActive="active">Home</a></li>
+        <li class="dropdown-container" (mouseenter)="toggleBooksDropdown(true)" (mouseleave)="toggleBooksDropdown(false)">
+          <a class="dropdown-trigger" [class.active]="showBooksDropdown">Books <span class="chevron">▾</span></a>
+          <div class="dropdown-menu" *ngIf="showBooksDropdown">
+            <a routerLink="/userviewbooks" (click)="toggleBooksDropdown(false)">Browse Books</a>
+            <a routerLink="/userviewappliedrequest" (click)="toggleBooksDropdown(false)">My Rentals</a>
+          </div>
+        </li>
+        <li class="dropdown-container" (mouseenter)="toggleFeedbackDropdown(true)" (mouseleave)="toggleFeedbackDropdown(false)">
+          <a class="dropdown-trigger" [class.active]="showFeedbackDropdown">Feedback <span class="chevron">▾</span></a>
+          <div class="dropdown-menu" *ngIf="showFeedbackDropdown">
+            <a routerLink="/useraddfeedback" (click)="toggleFeedbackDropdown(false)">Post Feedback</a>
+            <a routerLink="/userviewfeedback" (click)="toggleFeedbackDropdown(false)">My Feedbacks</a>
+          </div>
+        </li>
+      </ul>
+    </div>
 
-  <div class="nav-right">
-    <button class="logout-btn" (click)="openLogoutModal()">Logout</button>
+    <div class="nav-actions">
+      <div class="user-profile">
+        <div class="avatar">{{ username.charAt(0) | uppercase }}</div>
+        <div class="user-details">
+          <span class="user-name">{{ username }}</span>
+          <span class="user-role">{{ userRole }}</span>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm logout-btn" (click)="openLogoutModal()">Log Out</button>
+    </div>
   </div>
 </nav>
 
 <!-- Logout Confirmation Modal -->
 <div class="modal-overlay" *ngIf="showLogoutModal">
   <div class="modal-box">
-    <p class="modal-message">Are you sure you want to logout?</p>
+    <button class="modal-close-btn" (click)="closeLogoutModal()">×</button>
+    <h3 class="modal-title">Log Out</h3>
+    <p class="modal-message">Are you sure you want to log out?</p>
     <div class="modal-actions">
-      <button class="btn-success" (click)="confirmLogout()">Yes, Logout</button>
-      <button class="btn-danger" (click)="closeLogoutModal()">Cancel</button>
+      <button class="btn btn-outline" (click)="closeLogoutModal()">Cancel</button>
+      <button class="btn btn-danger" (click)="confirmLogout()">Yes, Log Out</button>
     </div>
   </div>
 </div>

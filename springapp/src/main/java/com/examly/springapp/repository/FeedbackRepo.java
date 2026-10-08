@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface FeedbackRepo extends JpaRepository<Feedback, Long> {
     List<Feedback> findByUserUserId(Long userId);
+    boolean existsByBookRentalRequestRentalId(Long rentalId);
 }

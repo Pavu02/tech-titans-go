@@ -1,41 +1,56 @@
-<div class="auth-container">
-  <div class="auth-card">
-    <div class="auth-banner">
-      <div class="banner-overlay">
-        <h1>BookHeaven</h1>
+<div class="auth-page">
+  <div class="auth-wrapper signup-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1 class="brand-text">BookHeaven</h1>
+        <h2>Create an account</h2>
+        <p>Join our community of readers today.</p>
       </div>
-    </div>
-
-    <div class="auth-form-section">
-      <h2>Signup</h2>
 
       <div *ngIf="errorMessage" class="alert-error">
         {{ errorMessage }}
       </div>
 
       <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="username">Username *</label>
-          <input
-            id="username"
-            type="text"
-            formControlName="username"
-            placeholder="Enter username"
-            class="form-control"
-            [class.input-error]="isSubmitted && signupForm.get('username')?.invalid"
-          />
-          <div *ngIf="isSubmitted && signupForm.get('username')?.errors as errors" class="error-text">
-            <span *ngIf="errors['required']">Username is required</span>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label" for="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              formControlName="username"
+              placeholder="johndoe"
+              class="form-control"
+              [class.input-error]="isSubmitted && signupForm.get('username')?.invalid"
+            />
+            <div *ngIf="isSubmitted && signupForm.get('username')?.errors as errors" class="error-text">
+              <span *ngIf="errors['required']">Username is required</span>
+            </div>
+          </div>
+          <div class="form-group flex-1">
+            <label class="form-label" for="mobile">Mobile Number</label>
+            <input
+              id="mobile"
+              type="text"
+              formControlName="mobileNumber"
+              placeholder="1234567890"
+              class="form-control"
+              [class.input-error]="isSubmitted && signupForm.get('mobileNumber')?.invalid"
+            />
+            <div *ngIf="isSubmitted && signupForm.get('mobileNumber')?.errors as errors" class="error-text">
+              <span *ngIf="errors['required']">Mobile is required</span>
+              <span *ngIf="errors['pattern']">Must be 10 digits</span>
+            </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="email">Email *</label>
+          <label class="form-label" for="email">Email address</label>
           <input
             id="email"
             type="email"
             formControlName="email"
-            placeholder="Enter email"
+            placeholder="john@example.com"
             class="form-control"
             [class.input-error]="isSubmitted && signupForm.get('email')?.invalid"
           />
@@ -45,60 +60,46 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="mobile">Mobile *</label>
-          <input
-            id="mobile"
-            type="text"
-            formControlName="mobileNumber"
-            placeholder="Enter mobile number"
-            class="form-control"
-            [class.input-error]="isSubmitted && signupForm.get('mobileNumber')?.invalid"
-          />
-          <div *ngIf="isSubmitted && signupForm.get('mobileNumber')?.errors as errors" class="error-text">
-            <span *ngIf="errors['required']">MobileNumber is required</span>
-            <span *ngIf="errors['pattern']">Mobile number must be 10 digits</span>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label" for="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              formControlName="password"
+              placeholder="••••••••"
+              class="form-control"
+              [class.input-error]="isSubmitted && signupForm.get('password')?.invalid"
+            />
+            <div *ngIf="isSubmitted && signupForm.get('password')?.errors as errors" class="error-text">
+              <span *ngIf="errors['required']">Password is required</span>
+              <span *ngIf="errors['minlength']">At least 6 chars</span>
+            </div>
+          </div>
+
+          <div class="form-group flex-1">
+            <label class="form-label" for="confirmPassword">Confirm Password</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              formControlName="confirmPassword"
+              placeholder="••••••••"
+              class="form-control"
+              [class.input-error]="isSubmitted && (signupForm.get('confirmPassword')?.invalid || signupForm.errors?.['passwordMismatch'])"
+            />
+            <div *ngIf="isSubmitted" class="error-text">
+              <span *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">Required</span>
+              <span *ngIf="!signupForm.get('confirmPassword')?.errors?.['required'] && signupForm.errors?.['passwordMismatch']">Passwords do not match</span>
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="password">Password *</label>
-          <input
-            id="password"
-            type="password"
-            formControlName="password"
-            placeholder="Enter password"
-            class="form-control"
-            [class.input-error]="isSubmitted && signupForm.get('password')?.invalid"
-          />
-          <div *ngIf="isSubmitted && signupForm.get('password')?.errors as errors" class="error-text">
-            <span *ngIf="errors['required']">Password is required</span>
-            <span *ngIf="errors['minlength']">Password must be at least 6 characters</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="confirmPassword">Confirm Password *</label>
-          <input
-            id="confirmPassword"
-            type="password"
-            formControlName="confirmPassword"
-            placeholder="Confirm password"
-            class="form-control"
-            [class.input-error]="isSubmitted && (signupForm.get('confirmPassword')?.invalid || signupForm.errors?.['passwordMismatch'])"
-          />
-          <div *ngIf="isSubmitted" class="error-text">
-            <span *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">Confirm Password is required</span>
-            <span *ngIf="!signupForm.get('confirmPassword')?.errors?.['required'] && signupForm.errors?.['passwordMismatch']">Passwords do not match</span>
-          </div>
-        </div>
-
-        <button type="submit" class="submit-btn">Signup</button>
+        <button type="submit" class="btn btn-primary w-100 mt-2">Create Account</button>
       </form>
 
-      <p class="switch-auth">
-        Already have an account? <a routerLink="/login">Login</a>
-      </p>
+      <div class="auth-footer">
+        <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+      </div>
     </div>
   </div>
 </div>
@@ -106,9 +107,10 @@
 <!-- Registration Success Modal -->
 <div class="modal-overlay" *ngIf="showSuccessModal">
   <div class="modal-box">
+    <h3 class="modal-title">Success</h3>
     <p class="modal-message">User Registration is Successful!</p>
     <div class="modal-actions">
-      <button class="btn-primary" (click)="onModalOk()">Ok</button>
+      <button class="btn btn-primary" (click)="onModalOk()">Continue to Login</button>
     </div>
   </div>
 </div>
@@ -116,24 +118,26 @@
 <!-- OTP Verification Modal -->
 <div class="modal-overlay" *ngIf="showOtpModal">
   <div class="modal-box">
-    <p class="modal-message">An OTP has been sent to your email.</p>
+    <h3 class="modal-title">Verify Email</h3>
+    <p class="modal-message">We've sent a 6-digit OTP to your email address.</p>
     
-    <div *ngIf="otpError" class="alert-error" style="margin-bottom: 1rem;">
+    <div *ngIf="otpError" class="alert-error">
       {{ otpError }}
     </div>
 
-    <input 
-      type="text" 
-      [(ngModel)]="otpValue" 
-      placeholder="Enter 6-digit OTP" 
-      class="form-control" 
-      style="margin-bottom: 1rem; text-align: center; letter-spacing: 2px; font-size: 1.2rem;"
-      maxlength="6"
-    />
+    <div class="form-group">
+      <input 
+        type="text" 
+        [(ngModel)]="otpValue" 
+        placeholder="Enter 6-digit OTP" 
+        class="form-control text-center otp-input" 
+        maxlength="6"
+      />
+    </div>
     
-    <div class="modal-actions" style="display: flex; gap: 1rem;">
-      <button class="btn-secondary" (click)="closeOtpModal()">Cancel</button>
-      <button class="btn-primary" (click)="verifyOtpAndRegister()">Verify</button>
+    <div class="modal-actions">
+      <button class="btn btn-outline" (click)="closeOtpModal()">Cancel</button>
+      <button class="btn btn-primary" (click)="verifyOtpAndRegister()">Verify & Register</button>
     </div>
   </div>
 </div>

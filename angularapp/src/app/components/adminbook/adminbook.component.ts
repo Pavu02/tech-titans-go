@@ -32,7 +32,8 @@ export class AdminbookComponent implements OnInit {
       genre: ['', Validators.required],
       description: ['', Validators.required],
       rentalFee: ['', [Validators.required, Validators.min(0)]],
-      coverImage: ['']
+      coverImage: [''],
+      isAvailable: [false]
     });
 
     this.route.queryParams.subscribe((params) => {
@@ -52,7 +53,8 @@ export class AdminbookComponent implements OnInit {
           author: book.author,
           genre: book.genre,
           description: book.description,
-          rentalFee: book.rentalFee
+          rentalFee: book.rentalFee,
+          isAvailable: book.isAvailable
         });
         this.coverImageBase64 = book.coverImage || '';
       },
@@ -86,7 +88,7 @@ export class AdminbookComponent implements OnInit {
       ...this.bookForm.value,
       rentalFee: Number(this.bookForm.value.rentalFee),
       coverImage: this.coverImageBase64 || 'assets/images/background.svg',
-      isAvailable: true
+      isAvailable: this.bookForm.value.isAvailable
     };
 
     if (this.isEditMode && this.bookId) {

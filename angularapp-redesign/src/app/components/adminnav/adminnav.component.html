@@ -1,0 +1,36 @@
+<nav class="admin-navbar">
+  <div class="nav-brand">
+    <a routerLink="/homePage" class="brand-text">BookHeaven</a>
+  </div>
+
+  <div class="nav-middle">
+    <div class="user-badge">{{ username }} / {{ userRole }}</div>
+    <ul class="nav-links">
+      <li><a routerLink="/homePage" routerLinkActive="active">Home</a></li>
+      <li class="dropdown-item" (mouseenter)="toggleBooksDropdown(true)" (mouseleave)="toggleBooksDropdown(false)">
+        <a class="dropdown-trigger">Books ▾</a>
+        <div class="dropdown-menu" *ngIf="showBooksDropdown">
+          <a routerLink="/adminbook" (click)="toggleBooksDropdown(false)">Add Book</a>
+          <a routerLink="/adminviewbook" (click)="toggleBooksDropdown(false)">View Books</a>
+        </div>
+      </li>
+      <li><a routerLink="/adminviewappliedrequest" routerLinkActive="active">Rental Requests</a></li>
+      <li><a routerLink="/adminviewfeedback" routerLinkActive="active">Feedbacks</a></li>
+    </ul>
+  </div>
+
+  <div class="nav-right">
+    <button class="logout-btn" (click)="openLogoutModal()">Logout</button>
+  </div>
+</nav>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showLogoutModal">
+  <div class="modal-box">
+    <p class="modal-message">Are you sure you want to logout?</p>
+    <div class="modal-actions">
+      <button class="btn-success" (click)="confirmLogout()">Yes, Logout</button>
+      <button class="btn-danger" (click)="closeLogoutModal()">Cancel</button>
+    </div>
+  </div>
+</div>

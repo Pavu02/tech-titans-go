@@ -1,0 +1,43 @@
+<app-usernav></app-usernav>
+
+<div class="view-container">
+  <h2 class="page-heading">My Feedback</h2>
+
+  <div class="table-responsive" *ngIf="feedbacks.length > 0; else noData">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Feedback</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let fb of feedbacks; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ fb.feedbackText }}</td>
+          <td class="action-cell">
+            <button class="btn-danger btn-sm" (click)="openDeleteModal(fb)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noData>
+    <div class="empty-state">
+      Oops! No records found
+    </div>
+  </ng-template>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showDeleteModal">
+  <div class="modal-box">
+    <p class="modal-message">Are you sure you want to delete?</p>
+    <div class="modal-actions">
+      <button class="btn-danger" (click)="confirmDelete()">Yes, Delete</button>
+      <button class="btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+    </div>
+  </div>
+</div>

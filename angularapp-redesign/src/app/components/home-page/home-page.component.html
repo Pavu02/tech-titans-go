@@ -1,0 +1,26 @@
+<app-adminnav *ngIf="isAdmin()"></app-adminnav>
+<app-usernav *ngIf="!isAdmin()"></app-usernav>
+
+<div class="homepage-container">
+  <div class="hero-oval-container">
+    <div class="hero-oval">
+      <img src="assets/images/background.svg" alt="Library Background" class="oval-image" />
+      <div class="oval-overlay">
+        <h2>BookHeaven</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="description-box">
+    <p>
+      Your reading adventure begins here! BookHeaven offers a diverse collection of books, from thrilling fiction and
+      inspiring non-fiction to educational resources and timeless classics. Rent your favorite books and let the stories
+      unfold!
+    </p>
+  </div>
+
+  <div class="contact-box">
+    <h3>Contact Us</h3>
+    <p>Phone: 123-456-7890</p>
+  </div>
+</div>

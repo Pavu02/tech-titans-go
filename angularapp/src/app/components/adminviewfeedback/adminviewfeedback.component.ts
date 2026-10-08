@@ -42,4 +42,16 @@ export class AdminviewfeedbackComponent implements OnInit {
     this.selectedUser = null;
     this.showProfileModal = false;
   }
+
+  getRatingText(rating: number): string {
+    const val = rating || 5;
+    switch(val) {
+      case 1: return '1 Star - Poor';
+      case 2: return '2 Stars - Fair';
+      case 3: return '3 Stars - Good';
+      case 4: return '4 Stars - Very Good';
+      case 5: return '5 Stars - Excellent';
+      default: return '5 Stars - Excellent';
+    }
+  }
 }

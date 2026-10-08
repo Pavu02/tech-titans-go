@@ -1,0 +1,58 @@
+<app-usernav></app-usernav>
+
+<div class="user-request-container">
+  <div class="header-action-row">
+    <button class="back-btn" (click)="goBack()">Back</button>
+  </div>
+
+  <div class="request-card">
+    <h2>Book Rental Request Form</h2>
+
+    <div *ngIf="generalErrorMessage" class="alert-error">
+      {{ generalErrorMessage }}
+    </div>
+
+    <form [formGroup]="rentalForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="returnDate">Return Date *</label>
+        <input
+          id="returnDate"
+          type="date"
+          [min]="minDate"
+          formControlName="returnDate"
+          class="form-control"
+          [class.input-error]="isSubmitted && rentalForm.get('returnDate')?.invalid"
+        />
+        <div *ngIf="isSubmitted && rentalForm.get('returnDate')?.errors as errors" class="error-text">
+          <span *ngIf="errors['required']">Return date is required</span>
+          <span *ngIf="errors['pastDate']">Return date cannot be in the past</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="comments">Comments</label>
+        <textarea
+          id="comments"
+          rows="4"
+          formControlName="comments"
+          placeholder="Enter comments"
+          class="form-control"
+        ></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="submit-btn">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" *ngIf="showSuccessModal">
+  <div class="modal-box">
+    <p class="modal-message">Successfully Submitted!</p>
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="onModalOk()">Ok</button>
+    </div>
+  </div>
+</div>

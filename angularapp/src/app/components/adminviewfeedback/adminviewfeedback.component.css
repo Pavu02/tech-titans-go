@@ -1,66 +1,107 @@
-.view-container {
-  padding: 30px 40px 60px;
-  max-width: 1200px;
-  margin: 0 auto;
+.page-header {
+  margin-bottom: 32px;
+}
+.page-subheading {
+  color: var(--text-secondary);
+  font-size: 16px;
 }
 
-.page-heading {
-  font-size: 1.6rem;
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 24px;
-  text-align: center;
+  color: var(--text-primary);
 }
 
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
+.avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.feedback-text {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.star-rating-display {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.star {
+  color: #e5e7eb;
+  font-size: 1.25rem;
+}
+
+.star.filled {
+  color: #f59e0b;
+}
+
+.feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.feedback-card {
   background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 0.88rem;
+.feedback-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
 
-.data-table thead tr {
-  background-color: #0284c7;
-  color: #ffffff;
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-.data-table th,
-.data-table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid #e2e8f0;
+.card-body .feedback-text {
+  margin: 0;
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.6;
 }
 
-.action-cell {
-  white-space: nowrap;
+.book-info {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.btn-sm {
-  padding: 5px 12px;
-  font-size: 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
+.book-icon {
+  font-size: 16px;
 }
 
-.profile-modal {
-  text-align: center;
-  max-width: 400px;
-}
-
-.profile-content {
-  margin: 16px 0 20px;
-  text-align: left;
-  font-size: 0.9rem;
-  color: #334155;
-}
-
-.profile-content p {
-  margin-bottom: 8px;
+.book-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
 }

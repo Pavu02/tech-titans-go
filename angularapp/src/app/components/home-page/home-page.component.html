@@ -1,26 +1,200 @@
 <app-adminnav *ngIf="isAdmin()"></app-adminnav>
 <app-usernav *ngIf="!isAdmin()"></app-usernav>
 
-<div class="homepage-container">
-  <div class="hero-oval-container">
-    <div class="hero-oval">
-      <img src="assets/images/background.svg" alt="Library Background" class="oval-image" />
-      <div class="oval-overlay">
-        <h2>BookHeaven</h2>
+<div class="homepage-wrapper">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <span class="hero-badge">✨ Welcome to BookHeaven</span>
+        <h1 class="hero-title">One-Stop Digital <br><span class="text-highlight">Solution For Your</span> Library</h1>
+        <p class="hero-subtitle">
+          Your reading adventure begins here! BookHeaven offers a diverse collection of books, from thrilling fiction and inspiring non-fiction to educational resources and timeless classics.
+        </p>
+        <div class="hero-actions">
+          <a routerLink="/login" class="btn btn-primary" *ngIf="!userRole">Get Started Free →</a>
+          <a routerLink="/login" class="btn btn-secondary" *ngIf="!userRole">View Catalog</a>
+          
+          <a routerLink="/userviewbooks" class="btn btn-primary" *ngIf="userRole === 'User'">Browse Catalog →</a>
+          <a routerLink="/adminviewbook" class="btn btn-primary" *ngIf="userRole === 'Admin'">Manage Books →</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="dashboard-mockup">
+          <div class="mockup-header">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+          </div>
+          <div class="mockup-body">
+            <div class="mockup-sidebar">
+              <div class="mockup-nav-item"></div>
+              <div class="mockup-nav-item"></div>
+              <div class="mockup-nav-item"></div>
+            </div>
+            <div class="mockup-content">
+              <div class="mockup-title"></div>
+              <div class="mockup-cards">
+                <div class="mockup-card"></div>
+                <div class="mockup-card"></div>
+                <div class="mockup-card"></div>
+              </div>
+              <div class="mockup-table"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="description-box">
-    <p>
-      Your reading adventure begins here! BookHeaven offers a diverse collection of books, from thrilling fiction and
-      inspiring non-fiction to educational resources and timeless classics. Rent your favorite books and let the stories
-      unfold!
-    </p>
-  </div>
+  <!-- Features Section -->
+  <section class="features-section bg-light">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Powerful Features</span>
+        <h2>Features You Need to <span class="text-highlight">Succeed</span></h2>
+        <p>Comprehensive tools designed to simplify library management and enhance reader experience.</p>
+      </div>
 
-  <div class="contact-box">
-    <h3>Contact Us</h3>
-    <p>Phone: 123-456-7890</p>
-  </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon icon-blue">📚</div>
+          <h3>Digital Book Management</h3>
+          <p>Easily manage and browse our vast collection of books across multiple genres.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-green">🔄</div>
+          <h3>Book Requests</h3>
+          <p>Request to rent your favorite books and track your rental status in real-time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-yellow">⭐</div>
+          <h3>Feedback System</h3>
+          <p>Share your thoughts and read reviews from other community members.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-red">🛡️</div>
+          <h3>Secure Authentication</h3>
+          <p>Safe and reliable access with secure registration and login systems.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="stats-section bg-green">
+    <div class="container">
+      <div class="section-header text-white">
+        <h2>Trusted by Readers Nationwide</h2>
+        <p>Join the growing community of modern readers using BookHeaven</p>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-icon">📚</div>
+          <h3 class="stat-number">{{ stats.totalBooks > 0 ? stats.totalBooks : '5,000' }}+</h3>
+          <p class="stat-label">Books Available</p>
+          <span class="stat-sub">Across all genres</span>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">👥</div>
+          <h3 class="stat-number">{{ stats.totalUsers > 0 ? stats.totalUsers : '10,000' }}+</h3>
+          <p class="stat-label">Active Readers</p>
+          <span class="stat-sub">Community members</span>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">🔖</div>
+          <h3 class="stat-number">{{ stats.totalRentals > 0 ? stats.totalRentals : '100' }}+</h3>
+          <p class="stat-label">Books Rented</p>
+          <span class="stat-sub">And growing</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>Get started with your digital library in 4 simple steps</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-icon">1</div>
+          <div class="step-content">
+            <span class="step-badge">Step 1</span>
+            <h3>Sign Up</h3>
+            <p>Create your account in under 2 minutes. Enter your basic details and verify.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">2</div>
+          <div class="step-content">
+            <span class="step-badge">Step 2</span>
+            <h3>Browse Catalog</h3>
+            <p>Explore our extensive collection of books and find what interests you.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">3</div>
+          <div class="step-content">
+            <span class="step-badge">Step 3</span>
+            <h3>Request Rental</h3>
+            <p>Select your book and submit a rental request for the desired duration.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">4</div>
+          <div class="step-content">
+            <span class="step-badge">Step 4</span>
+            <h3>Start Reading</h3>
+            <p>Once approved, collect your book and immerse yourself in the story!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h2 class="brand-text">BookHeaven</h2>
+          <p>Your one-stop digital solution for seamless library management and reading adventures.</p>
+        </div>
+        <div class="footer-links">
+          <div class="link-group">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a routerLink="/homePage">Home</a></li>
+              
+              <!-- When Not Logged In -->
+              <li *ngIf="!userRole"><a routerLink="/login">Login</a></li>
+              <li *ngIf="!userRole"><a routerLink="/signup">Sign Up</a></li>
+
+              <!-- User Quick Links -->
+              <li *ngIf="userRole === 'User'"><a routerLink="/userviewbooks">Browse Books</a></li>
+              <li *ngIf="userRole === 'User'"><a routerLink="/userviewappliedrequest">View Rentals</a></li>
+
+              <!-- Admin Quick Links -->
+              <li *ngIf="userRole === 'Admin'"><a routerLink="/adminviewbook">Manage Books</a></li>
+              <li *ngIf="userRole === 'Admin'"><a routerLink="/adminbook">Add Book</a></li>
+            </ul>
+          </div>
+          <div class="link-group">
+            <h3>Contact Us</h3>
+            <ul>
+              <li>Phone: 123-456-7890</li>
+              <li>Email: support@bookheaven.com</li>
+              <li>Address: 123 Library Way, City</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 BookHeaven. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 </div>

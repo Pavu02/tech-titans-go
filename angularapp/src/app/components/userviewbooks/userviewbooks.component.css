@@ -1,105 +1,173 @@
-.view-container {
-  padding: 30px 40px 60px;
-  max-width: 1200px;
-  margin: 0 auto;
+.page-header {
+  margin-bottom: 32px;
+}
+.page-subheading {
+  color: var(--text-secondary);
+  font-size: 16px;
 }
 
-.page-heading {
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 24px;
-  text-align: center;
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
 }
 
-.filter-bar {
-  margin-bottom: 20px;
-}
-
-.form-control-search {
-  width: 100%;
-  max-width: 320px;
-  padding: 8px 14px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 0.88rem;
-  outline: none;
-}
-
-.form-control-search:focus {
-  border-color: #2563eb;
-}
-
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 0.88rem;
-}
-
-.data-table thead tr {
-  background-color: #0284c7;
-  color: #ffffff;
-}
-
-.data-table th,
-.data-table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.text-available {
-  color: #16a34a;
-  font-weight: 500;
-}
-
-.text-unavailable {
-  color: #dc2626;
-  font-weight: 500;
-}
-
-.action-cell {
-  white-space: nowrap;
-}
-
-.action-btn-group {
+.book-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
-  gap: 8px;
+  flex-direction: column;
 }
 
-.btn-sm {
-  padding: 5px 14px;
-  font-size: 0.82rem;
-  border-radius: 4px;
+.book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.book-cover {
+  height: 200px;
+  position: relative;
+  background-color: var(--background);
   cursor: pointer;
+  overflow: hidden;
 }
 
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.book-card:hover .book-cover img {
+  transform: scale(1.05);
+}
+
+.cover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.cover-overlay span {
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 1px solid #fff;
+  border-radius: 20px;
+}
+
+.book-cover:hover .cover-overlay {
+  opacity: 1;
+}
+
+.book-details {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.book-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.genre-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  background-color: var(--primary-light);
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.book-title {
+  font-size: 20px;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.book-author {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.book-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 24px;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.book-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.book-fee {
+  display: flex;
+  flex-direction: column;
+}
+
+.fee-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.fee-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .image-modal {
-  max-width: 380px;
-  padding: 30px 20px 20px;
+  padding: 16px;
+  max-width: 600px;
 }
 
 .cover-image-container {
+  width: 100%;
+  max-height: 70vh;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .cover-preview {
   max-width: 100%;
-  max-height: 420px;
+  max-height: 70vh;
+  object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
 }
