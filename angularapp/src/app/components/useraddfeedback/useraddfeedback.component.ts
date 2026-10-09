@@ -27,7 +27,7 @@ export class UseraddfeedbackComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private rentalService: BookrentalrequestService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
@@ -49,9 +49,22 @@ export class UseraddfeedbackComponent implements OnInit {
   loadReturnedRentals(): void {
     const userId = this.authService.getUserId();
     if (userId) {
-      this.rentalService.getBookRentalRequestsByUserId(userId).subscribe({
-        next: (data) => {
-          this.returnedRentals = (data || []).filter(req => req.status?.toLowerCase() === 'returned');
+      this.feedbackService.getAllFeedbacksByUserId(userId).subscribe({
+        next: (feedbacks) => {
+          const reviewedRentalIds = new Set((feedbacks || []).map(fb => fb.rentalId || fb.bookRentalRequest?.rentalId));
+          
+          if (this.rentalId && reviewedRentalIds.has(this.rentalId)) {
+            this.errorMessage = 'Feedback already posted for this rental.';
+            this.feedbackForm.patchValue({ rentalId: '' });
+          }
+
+          this.rentalService.getBookRentalRequestsByUserId(userId).subscribe({
+            next: (data) => {
+              this.returnedRentals = (data || []).filter(req =>
+                req.status?.toLowerCase() === 'returned' && req.rentalId && !reviewedRentalIds.has(req.rentalId)
+              );
+            }
+          });
         }
       });
     }
@@ -91,8 +104,14 @@ export class UseraddfeedbackComponent implements OnInit {
         this.feedbackForm.reset();
         this.isSubmitted = false;
       },
-      error: () => {
-        this.errorMessage = 'Failed to submit feedback. Please try again.';
+      error: (err) => {
+        if (err.error && typeof err.error === 'string') {
+          this.errorMessage = err.error;
+        } else if (err.error && err.error.message) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Failed to submit feedback. Please try again.';
+        }
       }
     });
   }

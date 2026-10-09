@@ -113,6 +113,17 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
             existing.setRequestDate(requestDTO.requestDate());
         }
 
+        // Calculate final rental payment exactly once when the book is returned
+        if ("Returned".equalsIgnoreCase(existing.getStatus()) && existing.getTotalRentalAmount() == null) {
+            if (existing.getBook() != null && existing.getBook().getRentalFee() != null
+                    && existing.getRequestDate() != null && existing.getReturnDate() != null) {
+                long days = java.time.temporal.ChronoUnit.DAYS.between(existing.getRequestDate(), existing.getReturnDate()) + 1;
+                if (days < 1) days = 1;
+                double amount = existing.getBook().getRentalFee() * days;
+                existing.setTotalRentalAmount(amount);
+            }
+        }
+
         return rentalRequestRepo.save(existing);
     }
 

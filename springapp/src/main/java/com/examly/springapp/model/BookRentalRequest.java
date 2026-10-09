@@ -30,6 +30,8 @@ public class BookRentalRequest {
 
     private String comments;
 
+    private Double totalRentalAmount;
+
     public BookRentalRequest() {
     }
 
@@ -41,6 +43,7 @@ public class BookRentalRequest {
         this.returnDate = returnDate;
         this.status = status;
         this.comments = comments;
+        this.totalRentalAmount = null;
     }
 
     public Long getRentalId() {
@@ -97,5 +100,13 @@ public class BookRentalRequest {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public Double getTotalRentalAmount() {
+        return totalRentalAmount;
+    }
+
+    public void setTotalRentalAmount(Double totalRentalAmount) {
+        this.totalRentalAmount = totalRentalAmount;
     }
 }

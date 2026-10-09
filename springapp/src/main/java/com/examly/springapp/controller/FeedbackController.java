@@ -24,9 +24,14 @@ public class FeedbackController {
 
     @PostMapping
     public ResponseEntity<?> createFeedback(@Valid @RequestBody FeedbackRequestDTO feedbackDTO) {
-        Feedback created = feedbackService.createFeedback(feedbackDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        // Returns 201
+        try {
+            Feedback created = feedbackService.createFeedback(feedbackDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+            // Returns 201
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            // Returns 400
+        }
     }
 
     @GetMapping

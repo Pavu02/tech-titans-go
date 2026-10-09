@@ -3,6 +3,7 @@ import { BookRentalRequest } from '../../models/book-rental-request.model';
 import { BookrentalrequestService } from '../../services/bookrentalrequest.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { FeedbackService } from '../../services/feedback.service';
 
 @Component({
   selector: 'app-userviewappliedrequest',
@@ -17,11 +18,13 @@ export class UserviewappliedrequestComponent implements OnInit {
   selectedRequest: BookRentalRequest | null = null;
   requestToDelete: BookRentalRequest | null = null;
   showDeleteModal: boolean = false;
+  reviewedRentalIds: Set<number> = new Set<number>();
 
   constructor(
     private rentalService: BookrentalrequestService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private feedbackService: FeedbackService
   ) {}
 
   ngOnInit(): void {
@@ -31,14 +34,27 @@ export class UserviewappliedrequestComponent implements OnInit {
   loadUserRequests(): void {
     const userId = this.authService.getUserId();
     if (userId) {
-      this.rentalService.getBookRentalRequestsByUserId(userId).subscribe({
-        next: (data) => {
-          this.requests = data || [];
-          this.applyFilter();
+      this.feedbackService.getAllFeedbacksByUserId(userId).subscribe({
+        next: (feedbacks) => {
+          this.reviewedRentalIds = new Set((feedbacks || []).map(fb => fb.rentalId || fb.bookRentalRequest?.rentalId));
+          this.rentalService.getBookRentalRequestsByUserId(userId).subscribe({
+            next: (data) => {
+              this.requests = data || [];
+              this.applyFilter();
+            },
+            error: () => {
+              this.requests = [];
+              this.filteredRequests = [];
+            }
+          });
         },
         error: () => {
-          this.requests = [];
-          this.filteredRequests = [];
+           this.rentalService.getBookRentalRequestsByUserId(userId).subscribe({
+            next: (data) => {
+              this.requests = data || [];
+              this.applyFilter();
+            }
+          });
         }
       });
     }

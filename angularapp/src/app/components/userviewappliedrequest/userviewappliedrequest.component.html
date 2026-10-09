@@ -43,7 +43,12 @@
           </td>
           <td class="action-cell">
             <div class="action-btn-group">
-              <button class="btn btn-primary btn-sm" *ngIf="req.status?.toLowerCase() === 'returned'" (click)="giveFeedback(req)">Give Feedback</button>
+              <button class="btn btn-primary btn-sm" 
+                      *ngIf="req.status?.toLowerCase() === 'returned'"
+                      [disabled]="req.rentalId && reviewedRentalIds.has(req.rentalId)"
+                      (click)="req.rentalId && reviewedRentalIds.has(req.rentalId) ? null : giveFeedback(req)">
+                {{ req.rentalId && reviewedRentalIds.has(req.rentalId) ? 'Feedback Given' : 'Give Feedback' }}
+              </button>
               <button class="btn btn-outline btn-sm" (click)="showMore(req)">Details</button>
               <button class="btn btn-danger btn-sm" *ngIf="req.status?.toLowerCase() === 'pending'" (click)="openDeleteModal(req)">Delete</button>
             </div>
@@ -100,6 +105,10 @@
       <div class="detail-item full-width" *ngIf="selectedRequest.comments">
         <span class="detail-label">Comments</span>
         <span class="detail-value">{{ selectedRequest.comments }}</span>
+      </div>
+      <div class="detail-item full-width" *ngIf="selectedRequest.status?.toLowerCase() === 'returned' && selectedRequest.totalRentalAmount">
+        <span class="detail-label" style="color: var(--primary);">Total Rental Cost</span>
+        <span class="detail-value" style="font-size: 1.2em; color: var(--primary);">₹{{ selectedRequest.totalRentalAmount }}</span>
       </div>
     </div>
   </div>

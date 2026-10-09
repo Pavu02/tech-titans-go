@@ -19,4 +19,5 @@ export interface BookRentalRequest {
   rentalFee?: number;
   coverImage?: string;
   description?: string;
+  totalRentalAmount?: number;
 }
