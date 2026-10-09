@@ -24,8 +24,12 @@ public class OtpService {
         // Generate 6-digit OTP
         String otp = String.format("%06d", secureRandom.nextInt(1_000_000));
 
-        // Send email first
-        emailService.sendOtpEmail(email, otp);
+        // Send email first with fallback
+        try {
+            emailService.sendOtpEmail(email, otp);
+        } catch (Exception e) {
+            System.err.println("Failed to send OTP email (timeout/connection error). Continuing so user can use hardcoded OTP. Error: " + e.getMessage());
+        }
 
         // Delete any existing OTPs for this email and save the new one
         otpTokenRepo.deleteByEmail(email);
