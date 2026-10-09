@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { AdminbookComponent } from './components/adminbook/adminbook.component';
 import { AdminviewbookComponent } from './components/adminviewbook/adminviewbook.component';
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
 
   { path: 'homePage', component: HomePageComponent, canActivate: [AuthGuard] },
   { path: 'dashboard', redirectTo: 'homePage', pathMatch: 'full' },

@@ -30,6 +30,14 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/api/request-otp`, { email });
   }
 
+  forgotPasswordRequestOtp(email: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/api/forgot-password/request-otp`, { email });
+  }
+
+  forgotPasswordReset(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/api/forgot-password/reset`, payload);
+  }
+
   register(user: User): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/api/register`, user);
   }

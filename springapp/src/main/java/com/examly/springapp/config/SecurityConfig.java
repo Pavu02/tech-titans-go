@@ -81,7 +81,7 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/api/register", "/api/login", "/api/request-otp").permitAll()
+                .requestMatchers("/api/register", "/api/login", "/api/request-otp", "/api/forgot-password/request-otp", "/api/forgot-password/reset").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/books", "/api/stats").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/books").hasAnyAuthority("Admin", "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/books/**").hasAnyAuthority("Admin", "ROLE_ADMIN")

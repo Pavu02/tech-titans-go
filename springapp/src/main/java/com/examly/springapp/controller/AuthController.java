@@ -42,6 +42,42 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/forgot-password/request-otp")
+    public ResponseEntity<?> forgotPasswordRequestOtp(@Valid @RequestBody com.examly.springapp.dto.OtpRequestDTO requestDTO) {
+        if (userRepo.existsByEmail(requestDTO.email())) {
+            otpService.generateAndSendOtp(requestDTO.email());
+        }
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "If the email is registered, an OTP has been sent.");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/forgot-password/reset")
+    public ResponseEntity<?> forgotPasswordReset(@Valid @RequestBody com.examly.springapp.dto.ResetPasswordDTO resetDTO) {
+        if (!otpService.validateOtp(resetDTO.email(), resetDTO.otp())) {
+            Map<String, String> err = new HashMap<>();
+            err.put("message", "Invalid or expired OTP");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+        }
+
+        try {
+            boolean success = userService.resetPassword(resetDTO);
+            if (success) {
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Password reset successfully");
+                return ResponseEntity.ok(response);
+            } else {
+                Map<String, String> err = new HashMap<>();
+                err.put("message", "User not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+            }
+        } catch (RuntimeException e) {
+            Map<String, String> err = new HashMap<>();
+            err.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+        }
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequestDTO registerDTO) {
         if (userRepo.existsByEmail(registerDTO.email())) {

@@ -32,7 +32,7 @@
           <th>Title</th>
           <th>Author</th>
           <th>Genre</th>
-          <th>Fee (₹)</th>
+          <th>Fee Per Day (₹)</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
@@ -46,7 +46,7 @@
           <td>
             <span class="genre-tag">{{ book.genre }}</span>
           </td>
-          <td>₹{{ book.rentalFee }}</td>
+          <td>₹{{ book.rentalFee }}/day</td>
           <td>
             <span class="badge" [ngClass]="book.isAvailable ? 'badge-available' : 'badge-unavailable'">
               {{ book.isAvailable ? 'Available' : 'Unavailable' }}
@@ -57,6 +57,7 @@
               <button class="btn btn-sm" [ngClass]="book.isAvailable ? 'btn-outline' : 'btn-success'" (click)="toggleAvailability(book)">
                 {{ book.isAvailable ? 'Make Unavailable' : 'Make Available' }}
               </button>
+              <button class="btn btn-outline btn-sm" (click)="openDetailsModal(book)">Show Details</button>
               <button class="btn btn-outline btn-sm" (click)="onEdit(book)">Edit</button>
               <button class="btn btn-danger btn-sm" (click)="openDeleteModal(book)">Delete</button>
             </div>
@@ -85,6 +86,46 @@
     <div class="modal-actions">
       <button class="btn btn-outline" (click)="closeDeleteModal()">Cancel</button>
       <button class="btn btn-danger" (click)="confirmDelete()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Book Details Modal -->
+<div class="modal-overlay" *ngIf="showDetailsModal" (click)="closeDetailsModal()">
+  <div class="modal-box details-modal" (click)="$event.stopPropagation()">
+    <button class="modal-close-btn" (click)="closeDetailsModal()">×</button>
+    
+    <div class="details-content" *ngIf="bookDetails">
+      <div class="details-image-container">
+        <img [src]="bookDetails.coverImage || 'assets/images/background.svg'" alt="Book Cover" class="details-cover-image">
+      </div>
+      
+      <div class="details-info">
+        <h2 class="details-title">{{ bookDetails.title }}</h2>
+        <p class="details-author">By {{ bookDetails.author }}</p>
+        
+        <div class="details-tags">
+          <span class="genre-tag">{{ bookDetails.genre }}</span>
+          <span class="badge" [ngClass]="bookDetails.isAvailable ? 'badge-available' : 'badge-unavailable'">
+            {{ bookDetails.isAvailable ? 'Available' : 'Unavailable' }}
+          </span>
+        </div>
+        
+        <div class="details-description">
+          <p>{{ bookDetails.description || 'No description available for this book.' }}</p>
+        </div>
+        
+        <div class="details-meta">
+          <div class="meta-item">
+            <span class="meta-label">Fee Per Day:</span>
+            <span class="meta-value">₹{{ bookDetails.rentalFee }}/day</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Book ID:</span>
+            <span class="meta-value">#{{ bookDetails.bookId }}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

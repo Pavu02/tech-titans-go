@@ -40,8 +40,8 @@
         <p class="book-desc">{{ book.description }}</p>
         <div class="book-footer">
           <div class="book-fee">
-            <span class="fee-label">Rental Fee</span>
-            <span class="fee-amount">₹{{ book.rentalFee }}</span>
+            <span class="fee-label">Rental Fee Per Day</span>
+            <span class="fee-amount">₹{{ book.rentalFee }}/day</span>
           </div>
           <button
             *ngIf="isRented(book.bookId)"

@@ -12,6 +12,7 @@ com\examly\springapp\repository\BookRepo.class
 com\examly\springapp\service\ChatService.class
 com\examly\springapp\repository\OtpTokenRepo.class
 com\examly\springapp\mapper\BookMapper.class
+com\examly\springapp\dto\ResetPasswordDTO.class
 com\examly\springapp\dto\RegisterRequestDTO.class
 com\examly\springapp\repository\ErrorLogRepo.class
 com\examly\springapp\dto\BookRecommendationDTO.class

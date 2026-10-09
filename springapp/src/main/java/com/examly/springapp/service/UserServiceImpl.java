@@ -44,4 +44,18 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public boolean resetPassword(com.examly.springapp.dto.ResetPasswordDTO resetDTO) {
+        if (!resetDTO.newPassword().equals(resetDTO.confirmPassword())) {
+            throw new RuntimeException("Passwords do not match");
+        }
+        User user = userRepo.findByEmail(resetDTO.email()).orElse(null);
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(resetDTO.newPassword()));
+            userRepo.save(user);
+            return true;
+        }
+        return false;
+    }
 }

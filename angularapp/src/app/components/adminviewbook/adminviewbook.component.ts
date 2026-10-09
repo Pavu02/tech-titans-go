@@ -18,6 +18,8 @@ export class AdminviewbookComponent implements OnInit {
   selectedCoverImage: string | null = null;
   bookToDelete: Book | null = null;
   showDeleteModal: boolean = false;
+  bookDetails: Book | null = null;
+  showDetailsModal: boolean = false;
 
   constructor(private bookService: BookService, private router: Router) {}
 
@@ -98,6 +100,16 @@ export class AdminviewbookComponent implements OnInit {
   openDeleteModal(book: Book): void {
     this.bookToDelete = book;
     this.showDeleteModal = true;
+  }
+
+  openDetailsModal(book: Book): void {
+    this.bookDetails = book;
+    this.showDetailsModal = true;
+  }
+
+  closeDetailsModal(): void {
+    this.bookDetails = null;
+    this.showDetailsModal = false;
   }
 
   closeDeleteModal(): void {

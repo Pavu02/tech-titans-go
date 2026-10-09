@@ -7,4 +7,5 @@ import com.examly.springapp.model.User;
 public interface UserService {
     User createUser(RegisterRequestDTO registerDTO);
     User loginUser(LoginRequestDTO loginDTO);
+    boolean resetPassword(com.examly.springapp.dto.ResetPasswordDTO resetDTO);
 }

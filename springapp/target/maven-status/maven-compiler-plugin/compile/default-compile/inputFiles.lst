@@ -21,6 +21,7 @@ C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\service\UserServiceImpl.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\model\ChatMessage.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\config\JwtAccessDeniedHandler.java
+C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\ResetPasswordDTO.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\mapper\UserMapper.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\model\Book.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\controller\BookController.java

@@ -50,3 +50,98 @@
     align-items: stretch;
   }
 }
+
+/* Book Details Modal Styles */
+.details-modal {
+  max-width: 700px;
+  width: 90%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.details-content {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 600px) {
+  .details-content {
+    flex-direction: row;
+  }
+}
+
+.details-image-container {
+  flex: 0 0 40%;
+  background-color: var(--background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+}
+
+.details-cover-image {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  object-fit: cover;
+  aspect-ratio: 2/3;
+}
+
+.details-info {
+  flex: 1;
+  padding: 32px;
+}
+
+.details-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.details-author {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.details-tags {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.details-description {
+  margin-bottom: 24px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.details-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: var(--background);
+  padding: 16px;
+  border-radius: var(--radius-md);
+}
+
+.meta-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meta-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.meta-value {
+  font-weight: 700;
+  color: var(--text-primary);
+}
