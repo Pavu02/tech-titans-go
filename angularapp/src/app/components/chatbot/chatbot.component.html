@@ -20,7 +20,7 @@
     <div class="chat-messages" #scrollContainer>
       <div class="message" *ngFor="let msg of messages" [ngClass]="msg.sender === 'user' ? 'message-user' : 'message-bot'">
         <div class="message-bubble">
-          <p>{{ msg.text }}</p>
+          <p [innerHTML]="formatMessage(msg.text)"></p>
           <div class="meta-row" *ngIf="msg.matchedQuestion || msg.time">
             <span *ngIf="msg.matchedQuestion" class="matched-badge">FAQ: {{ msg.matchedQuestion }}</span>
             <span *ngIf="msg.time" class="timestamp">{{ msg.time }}</span>

@@ -1,6 +1,7 @@
 export interface ChatRequest {
   message: string;
   sessionId: string;
+  userId?: number;
 }
 
 export interface ChatResponse {

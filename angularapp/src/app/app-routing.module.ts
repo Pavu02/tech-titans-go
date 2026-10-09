@@ -15,6 +15,7 @@ import { UseraddfeedbackComponent } from './components/useraddfeedback/useraddfe
 import { UserviewfeedbackComponent } from './components/userviewfeedback/userviewfeedback.component';
 import { ErrorComponent } from './components/error/error.component';
 import { AuthGuard } from './components/authguard/auth.guard';
+import { UsersuggestionsComponent } from './components/usersuggestions/usersuggestions.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'userviewappliedrequest', component: UserviewappliedrequestComponent, canActivate: [AuthGuard], data: { role: 'User' } },
   { path: 'useraddfeedback', component: UseraddfeedbackComponent, canActivate: [AuthGuard], data: { role: 'User' } },
   { path: 'userviewfeedback', component: UserviewfeedbackComponent, canActivate: [AuthGuard], data: { role: 'User' } },
+  { path: 'usersuggestions', component: UsersuggestionsComponent, canActivate: [AuthGuard], data: { role: 'User' } },
 
   { path: 'error', component: ErrorComponent },
   { path: '**', redirectTo: 'error' }

@@ -1,0 +1,43 @@
+<app-usernav></app-usernav>
+<div class="suggestions-container">
+  <div class="header-section">
+    <h2>AI Personalized Suggestions</h2>
+    <p>Based on your rental history and feedback, our BookHeaven AI thinks you'll love these!</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Gemini AI is analyzing your profile...</p>
+  </div>
+
+  <div *ngIf="error" class="error-state">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!isLoading && !error && recommendations.length === 0" class="empty-state">
+    <p>We don't have enough data to make a recommendation right now. Try renting some books!</p>
+  </div>
+
+  <div class="books-grid" *ngIf="!isLoading && recommendations.length > 0">
+    <div class="book-card" *ngFor="let rec of recommendations">
+      <div class="book-image">
+        <!-- Using the default placeholder SVG per user requirement -->
+        <img src="assets/images/background.svg" alt="{{ rec.book.title }} cover">
+      </div>
+      <div class="book-content">
+        <h3 class="book-title">{{ rec.book.title }}</h3>
+        <p class="book-author">by {{ rec.book.author }}</p>
+        <span class="book-genre">{{ rec.book.genre }}</span>
+        
+        <div class="ai-reason">
+          <span class="ai-icon">💡</span>
+          <p>{{ rec.reason }}</p>
+        </div>
+
+        <button class="rent-btn" (click)="rentBook(rec.book.bookId)" [disabled]="!rec.book.isAvailable">
+          {{ rec.book.isAvailable ? 'Rent Now' : 'Out of Stock' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

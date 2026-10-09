@@ -1,0 +1,182 @@
+[
+    {
+        "title":  "Clean Code: A Handbook of Agile Software Craftsmanship",
+        "author":  "Robert C. Martin",
+        "genre":  "Programming",
+        "description":  "Even bad code can function. But if code isn\u0027t clean, it can bring a development organization to its knees.",
+        "rentalFee":  150.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Effective Java",
+        "author":  "Joshua Bloch",
+        "genre":  "Programming",
+        "description":  "A definitive guide to Java best practices and design patterns.",
+        "rentalFee":  120.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Spring in Action",
+        "author":  "Craig Walls",
+        "genre":  "Programming",
+        "description":  "The definitive guide to building Java applications using the Spring Framework.",
+        "rentalFee":  130.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "The Pragmatic Programmer",
+        "author":  "Andrew Hunt",
+        "genre":  "Programming",
+        "description":  "A book about software engineering processes and best practices.",
+        "rentalFee":  140.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Design Patterns",
+        "author":  "Erich Gamma",
+        "genre":  "Programming",
+        "description":  "Capturing a wealth of experience about the design of object-oriented software.",
+        "rentalFee":  160.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Dune",
+        "author":  "Frank Herbert",
+        "genre":  "Sci-Fi",
+        "description":  "Set on the desert planet Arrakis, Dune is the story of the boy Paul Atreides.",
+        "rentalFee":  80.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "The Martian",
+        "author":  "Andy Weir",
+        "genre":  "Sci-Fi",
+        "description":  "An astronaut becomes stranded on Mars and must use his ingenuity to survive.",
+        "rentalFee":  90.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Neuromancer",
+        "author":  "William Gibson",
+        "genre":  "Sci-Fi",
+        "description":  "A classic cyberpunk novel that popularized the concept of cyberspace.",
+        "rentalFee":  85.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "1984",
+        "author":  "George Orwell",
+        "genre":  "Fiction",
+        "description":  "A dystopian social science fiction novel and cautionary tale about totalitarianism.",
+        "rentalFee":  70.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "To Kill a Mockingbird",
+        "author":  "Harper Lee",
+        "genre":  "Fiction",
+        "description":  "A novel about the serious issues of rape and racial inequality.",
+        "rentalFee":  75.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "The Great Gatsby",
+        "author":  "F. Scott Fitzgerald",
+        "genre":  "Fiction",
+        "description":  "A story of the wealthy Jay Gatsby and his love for Daisy Buchanan.",
+        "rentalFee":  65.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Pride and Prejudice",
+        "author":  "Jane Austen",
+        "genre":  "Romance",
+        "description":  "A romantic novel of manners written in 1813.",
+        "rentalFee":  60.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "The Notebook",
+        "author":  "Nicholas Sparks",
+        "genre":  "Romance",
+        "description":  "A romantic drama novel based on a true story.",
+        "rentalFee":  55.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Outlander",
+        "author":  "Diana Gabaldon",
+        "genre":  "Romance",
+        "description":  "A historical drama that incorporates time travel and romance.",
+        "rentalFee":  80.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Sapiens",
+        "author":  "Yuval Noah Harari",
+        "genre":  "Non-Fiction",
+        "description":  "A book exploring the history of the human species.",
+        "rentalFee":  110.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Educated",
+        "author":  "Tara Westover",
+        "genre":  "Non-Fiction",
+        "description":  "A memoir about a young woman who grows up in a survivalist family.",
+        "rentalFee":  95.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Thinking, Fast and Slow",
+        "author":  "Daniel Kahneman",
+        "genre":  "Non-Fiction",
+        "description":  "A book exploring the two systems that drive the way we think.",
+        "rentalFee":  105.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "The Hobbit",
+        "author":  "J.R.R. Tolkien",
+        "genre":  "Fantasy",
+        "description":  "A fantasy novel following the quest of home-loving hobbit Bilbo Baggins.",
+        "rentalFee":  85.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "Harry Potter",
+        "author":  "J.K. Rowling",
+        "genre":  "Fantasy",
+        "description":  "The first novel in the Harry Potter series.",
+        "rentalFee":  90.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    },
+    {
+        "title":  "The Name of the Wind",
+        "author":  "Patrick Rothfuss",
+        "genre":  "Fantasy",
+        "description":  "A fantasy novel telling the story of Kvothe, a legendary figure.",
+        "rentalFee":  100.0,
+        "available":  true,
+        "coverImage":  "assets/images/background.svg"
+    }
+]

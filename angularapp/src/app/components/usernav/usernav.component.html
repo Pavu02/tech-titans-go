@@ -12,6 +12,7 @@
           <div class="dropdown-menu" *ngIf="showBooksDropdown">
             <a routerLink="/userviewbooks" (click)="toggleBooksDropdown(false)">Browse Books</a>
             <a routerLink="/userviewappliedrequest" (click)="toggleBooksDropdown(false)">My Rentals</a>
+            <a routerLink="/usersuggestions" (click)="toggleBooksDropdown(false)">✨ AI Suggestions</a>
           </div>
         </li>
         <li class="dropdown-container" (mouseenter)="toggleFeedbackDropdown(true)" (mouseleave)="toggleFeedbackDropdown(false)">

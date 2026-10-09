@@ -6,5 +6,7 @@ public record ChatRequestDTO(
     @NotBlank(message = "Message is required")
     String message,
     
-    String sessionId
+    String sessionId,
+    
+    Long userId
 ) {}

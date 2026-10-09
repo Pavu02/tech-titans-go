@@ -12,4 +12,5 @@ public interface BookService {
     List<Book> getAllBooks();
     Book updateBook(Long bookId, BookRequestDTO updatedBookDTO);
     Book deleteBook(Long bookId);
+    List<com.examly.springapp.dto.BookRecommendationDTO> getAiRecommendations(Long userId);
 }

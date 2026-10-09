@@ -38,4 +38,8 @@ export class BookService {
   deleteBook(bookId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/api/books/${bookId}`, { headers: this.getHeaders() });
   }
+
+  getAiRecommendations(userId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/api/books/recommendations/${userId}`, { headers: this.getHeaders() });
+  }
 }

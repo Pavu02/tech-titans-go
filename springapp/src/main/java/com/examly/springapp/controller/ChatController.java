@@ -25,7 +25,7 @@ public class ChatController {
 
     @PostMapping("/chat")
     public ResponseEntity<ChatResponseDTO> sendChatMessage(@Valid @RequestBody ChatRequestDTO requestDTO) {
-        ChatResponseDTO response = chatService.processChat(requestDTO.message(), requestDTO.sessionId());
+        ChatResponseDTO response = chatService.processChat(requestDTO.message(), requestDTO.sessionId(), requestDTO.userId());
         return ResponseEntity.status(HttpStatus.OK).body(response);
         // Returns 200
     }

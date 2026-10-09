@@ -82,4 +82,10 @@ public class BookController {
             // Returns 500
         }
     }
+
+    @GetMapping("/recommendations/{userId}")
+    public ResponseEntity<List<com.examly.springapp.dto.BookRecommendationDTO>> getAiRecommendations(@PathVariable Long userId) {
+        List<com.examly.springapp.dto.BookRecommendationDTO> recommendations = bookService.getAiRecommendations(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(recommendations);
+    }
 }

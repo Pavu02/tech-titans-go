@@ -1,11 +1,18 @@
 package com.examly.springapp.service;
 
 import com.examly.springapp.dto.ChatResponseDTO;
+import com.examly.springapp.model.Book;
 import com.examly.springapp.model.ChatMessage;
 import com.examly.springapp.model.FaqEntity;
+import com.examly.springapp.repository.BookRepo;
 import com.examly.springapp.repository.ChatMessageRepo;
 import com.examly.springapp.repository.FaqRepo;
+import com.examly.springapp.repository.FeedbackRepo;
+import com.examly.springapp.repository.BookRentalRequestRepo;
+import com.examly.springapp.model.Feedback;
+import com.examly.springapp.model.BookRentalRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,30 +21,44 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
 
     private final FaqRepo faqRepo;
+    private final BookRepo bookRepo;
     private final ChatMessageRepo chatMessageRepo;
     private final ResourceLoader resourceLoader;
+    private final ObjectMapper objectMapper;
+    private final FeedbackRepo feedbackRepo;
+    private final BookRentalRequestRepo rentalRequestRepo;
 
     @Value("${gemini.api.key:}")
     private String geminiApiKey;
 
-    @Value("${chatbot.lexical.threshold:0.08}")
-    private double lexicalThreshold;
-
     private final Map<String, List<Map<String, String>>> sessionMemory = new ConcurrentHashMap<>();
 
     // Constructor Injection
-    public ChatService(FaqRepo faqRepo, ChatMessageRepo chatMessageRepo, ResourceLoader resourceLoader) {
+    public ChatService(FaqRepo faqRepo, BookRepo bookRepo, ChatMessageRepo chatMessageRepo,
+            ResourceLoader resourceLoader, FeedbackRepo feedbackRepo, BookRentalRequestRepo rentalRequestRepo) {
         this.faqRepo = faqRepo;
+        this.bookRepo = bookRepo;
         this.chatMessageRepo = chatMessageRepo;
         this.resourceLoader = resourceLoader;
+        this.feedbackRepo = feedbackRepo;
+        this.rentalRequestRepo = rentalRequestRepo;
+        this.objectMapper = new ObjectMapper();
     }
 
     @PostConstruct
@@ -46,9 +67,9 @@ public class ChatService {
             if (faqRepo.count() == 0) {
                 Resource resource = resourceLoader.getResource("classpath:faqs.json");
                 if (resource.exists()) {
-                    ObjectMapper mapper = new ObjectMapper();
                     try (InputStream is = resource.getInputStream()) {
-                        List<Map<String, Object>> list = mapper.readValue(is, new TypeReference<>() {});
+                        List<Map<String, Object>> list = objectMapper.readValue(is, new TypeReference<>() {
+                        });
                         for (Map<String, Object> map : list) {
                             Long id = ((Number) map.get("id")).longValue();
                             String category = (String) map.get("category");
@@ -76,103 +97,130 @@ public class ChatService {
         sessionMemory.remove(sessionId);
     }
 
-    public ChatResponseDTO processChat(String message, String sessionId) {
+    private String getGeminiKey() {
+        if (geminiApiKey != null && !geminiApiKey.trim().isEmpty())
+            return geminiApiKey;
+        String envKey = System.getenv("GEMINI_API_KEY");
+        if (envKey != null && !envKey.trim().isEmpty())
+            return envKey;
+        try {
+            Path envPath = Paths.get(".env");
+            if (Files.exists(envPath)) {
+                List<String> lines = Files.readAllLines(envPath);
+                for (String line : lines) {
+                    if (line.startsWith("GEMINI_API_KEY=")) {
+                        return line.substring("GEMINI_API_KEY=".length()).trim();
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public ChatResponseDTO processChat(String message, String sessionId, Long userId) {
         String trimmed = (message != null) ? message.trim() : "";
         String sid = (sessionId != null && !sessionId.isEmpty()) ? sessionId : "default-session";
+        String reply = "I'm having trouble connecting to my AI brain right now. Please try again later!";
+        boolean matched = true;
 
-        List<FaqEntity> faqs = faqRepo.findAll();
-        FaqEntity bestFaq = null;
-        double bestScore = 0.0;
+        String apiKey = getGeminiKey();
 
-        for (FaqEntity faq : faqs) {
-            double qScore = jaccardSimilarity(trimmed, faq.getQuestion());
-            double aScore = jaccardSimilarity(trimmed, faq.getAnswer()) * 0.7;
-            double combined = Math.max(qScore, aScore);
-            if (combined > bestScore) {
-                bestScore = combined;
-                bestFaq = faq;
-            }
-        }
-
-        boolean matched = bestFaq != null && bestScore >= lexicalThreshold;
-        String reply;
-        String source = "lexical-fallback";
-        double confidence = bestFaq != null ? Math.min(1.0, Math.round(bestScore * 100.0) / 100.0) : 0.0;
-
-        if (matched) {
-            reply = bestFaq.getAnswer();
-            source = "faq-knowledge-base";
-            confidence = Math.max(confidence, 0.75);
+        if (apiKey == null) {
+            reply = "I cannot answer because the GEMINI_API_KEY is not configured in the backend.";
+            matched = false;
         } else {
-            reply = "I'm here to help with BookHeaven! You can ask me how to rent books, check your rental request status, post feedback, or contact our support team at 123-456-7890.";
-            source = "default-rule";
-            confidence = 0.50;
-        }
+            try {
+                // 1. Gather Context
+                List<FaqEntity> faqs = faqRepo.findAll();
+                String faqContext = faqs.stream()
+                        .map(f -> "Q: " + f.getQuestion() + " A: " + f.getAnswer())
+                        .collect(Collectors.joining("\n"));
 
-        // Store memory
-        List<Map<String, String>> turns = sessionMemory.computeIfAbsent(sid, k -> new ArrayList<>());
-        Map<String, String> userTurn = new HashMap<>();
-        userTurn.put("role", "user");
-        userTurn.put("text", trimmed);
-        turns.add(userTurn);
+                List<Book> books = bookRepo.findAll();
+                String bookContext = books.stream()
+                        .map(b -> b.getTitle() + " by " + b.getAuthor() + " (Genre: " + b.getGenre() + ") - "
+                                + b.getDescription())
+                        .collect(Collectors.joining("\n"));
+                        
+                String userContext = "No user logged in.";
+                if (userId != null) {
+                    List<BookRentalRequest> rentals = rentalRequestRepo.findByUserUserId(userId);
+                    String rentalContext = rentals.stream()
+                            .map(r -> "Rented: '" + r.getBook().getTitle() + "' Status: " + r.getStatus())
+                            .collect(Collectors.joining(", "));
+                            
+                    List<Feedback> feedbacks = feedbackRepo.findByUserUserId(userId);
+                    String feedbackContext = feedbacks.stream()
+                            .map(f -> "Rated '" + f.getBookRentalRequest().getBook().getTitle() + "' " + f.getRating() + "/5 stars: " + f.getFeedbackText())
+                            .collect(Collectors.joining("; "));
+                            
+                    userContext = "The current user has the following rental history: [" + rentalContext + "] and has left the following feedback on past books: [" + feedbackContext + "]. "
+                                + "Use this user history to provide highly personalized book recommendations when asked.";
+                }
 
-        Map<String, String> botTurn = new HashMap<>();
-        botTurn.put("role", "model");
-        botTurn.put("text", reply);
-        turns.add(botTurn);
+                String systemPrompt = "You are a helpful, professional AI assistant for 'BookHeaven', a library management application. "
+                        + "Your ONLY purpose is to assist users with questions related to books, book rentals, authors, and our library services. "
+                        + "DO NOT answer general knowledge questions outside of the book domain. If the user asks something unrelated, gently steer them back to books.\n\n"
+                        + "Here are our official FAQs to help you answer platform questions:\n" + faqContext + "\n\n"
+                        + "Here is the list of books currently in our database:\n" + bookContext + "\n\n"
+                        + "User Context:\n" + userContext + "\n\n"
+                        + "Provide concise, friendly answers and recommendations based strictly on the books we actually have.";
 
-        if (turns.size() > 16) {
-            turns.subList(0, turns.size() - 16).clear();
+                // 2. Build Gemini API Payload
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("system_instruction", Map.of("parts", Map.of("text", systemPrompt)));
+                payload.put("contents", List.of(Map.of("parts", List.of(Map.of("text", trimmed)))));
+
+                String jsonBody = objectMapper.writeValueAsString(payload);
+
+                // 3. Make HTTP POST
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(
+                                "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key="
+                                        + apiKey))
+                        .header("Content-Type", "application/json")
+                        .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() == 200) {
+                    JsonNode rootNode = objectMapper.readTree(response.body());
+                    JsonNode textNode = rootNode.path("candidates").get(0).path("content").path("parts").get(0)
+                            .path("text");
+                    if (!textNode.isMissingNode()) {
+                        reply = textNode.asText().trim();
+                    }
+                } else {
+                    reply = "Gemini API Error: " + response.statusCode() + " - " + response.body();
+                    matched = false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                reply = "An internal error occurred while communicating with the AI. " + e.getMessage();
+                matched = false;
+            }
         }
 
         ChatMessage cm = new ChatMessage(
                 sid,
                 trimmed,
                 reply,
-                matched && bestFaq != null ? bestFaq.getId() : null,
-                confidence,
-                LocalDateTime.now()
-        );
+                null,
+                1.0,
+                LocalDateTime.now());
         chatMessageRepo.save(cm);
 
         return new ChatResponseDTO(
                 reply,
                 matched,
-                matched && bestFaq != null ? bestFaq.getQuestion() : null,
-                matched && bestFaq != null ? bestFaq.getCategory() : null,
-                confidence,
-                source,
+                null,
+                null,
+                1.0,
+                "gemini-ai",
                 sid,
-                trimmed
-        );
-    }
-
-    private double jaccardSimilarity(String textA, String textB) {
-        if (textA == null || textB == null) return 0.0;
-        Set<String> wordsA = extractWords(textA);
-        Set<String> wordsB = extractWords(textB);
-        if (wordsA.isEmpty() || wordsB.isEmpty()) return 0.0;
-
-        int intersection = 0;
-        for (String w : wordsA) {
-            if (wordsB.contains(w)) {
-                intersection++;
-            }
-        }
-        Set<String> union = new HashSet<>(wordsA);
-        union.addAll(wordsB);
-        return union.isEmpty() ? 0.0 : (double) intersection / union.size();
-    }
-
-    private Set<String> extractWords(String text) {
-        String cleaned = text.toLowerCase().replaceAll("[^a-z0-9\\s]", " ");
-        String[] tokens = cleaned.split("\\s+");
-        Set<String> words = new HashSet<>();
-        for (String t : tokens) {
-            if (!t.trim().isEmpty()) {
-                words.add(t.trim());
-            }
-        }
-        return words;
+                trimmed);
     }
 }

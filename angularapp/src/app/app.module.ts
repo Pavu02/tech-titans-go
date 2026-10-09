@@ -22,6 +22,7 @@ import { UseraddfeedbackComponent } from './components/useraddfeedback/useraddfe
 import { UserviewfeedbackComponent } from './components/userviewfeedback/userviewfeedback.component';
 import { ErrorComponent } from './components/error/error.component';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
+import { UsersuggestionsComponent } from './components/usersuggestions/usersuggestions.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ChatbotComponent } from './components/chatbot/chatbot.component';
     UseraddfeedbackComponent,
     UserviewfeedbackComponent,
     ErrorComponent,
-    ChatbotComponent
+    ChatbotComponent,
+    UsersuggestionsComponent
   ],
   imports: [
     BrowserModule,

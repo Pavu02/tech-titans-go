@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
+import { AuthService } from '../../services/auth.service';
 import { ChatBubble } from '../../models/chat.model';
 
 @Component({
@@ -14,7 +15,7 @@ export class ChatbotComponent implements OnInit {
   isLoading: boolean = false;
   messages: ChatBubble[] = [];
 
-  constructor(private chatService: ChatService) {}
+  constructor(private chatService: ChatService, private authService: AuthService) {}
 
   ngOnInit(): void {
     let sid = sessionStorage.getItem('chatSessionId');
@@ -49,7 +50,9 @@ export class ChatbotComponent implements OnInit {
     this.userQuery = '';
     this.isLoading = true;
 
-    this.chatService.sendMessage({ message: query, sessionId: this.sessionId }).subscribe({
+    const currentUserId = this.authService.getUserId();
+
+    this.chatService.sendMessage({ message: query, sessionId: this.sessionId, userId: currentUserId ? Number(currentUserId) : undefined }).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.messages.push({
@@ -85,5 +88,13 @@ export class ChatbotComponent implements OnInit {
         this.messages = [];
       }
     });
+  }
+
+  formatMessage(text: string | undefined): string {
+    if (!text) return '';
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br>');
   }
 }

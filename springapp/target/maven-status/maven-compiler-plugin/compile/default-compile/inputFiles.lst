@@ -7,6 +7,7 @@ C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\service\BookService.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\repository\OtpTokenRepo.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\exceptions\DuplicateBookException.java
+C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\BookRecommendationDTO.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\config\JwtUtils.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\controller\StatsController.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\repository\UserRepo.java
@@ -34,6 +35,7 @@ C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\FeedbackRequestDTO.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\repository\ErrorLogRepo.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\ChatResponseDTO.java
+C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\config\DatabaseSeeder.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\dto\BookRentalRequestDTO.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\exceptions\BookException.java
 C:\Users\HOME\Downloads\project (2)\springapp\src\main\java\com\examly\springapp\model\FaqEntity.java
