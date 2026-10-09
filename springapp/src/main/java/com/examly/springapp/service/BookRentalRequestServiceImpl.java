@@ -85,6 +85,20 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
                     if (alreadyApproved) {
                         throw new IllegalArgumentException("This book has already been approved for another user.");
                     }
+
+                    // Auto-reject all other pending requests for the same book
+                    List<BookRentalRequest> pendingRequests = rentalRequestRepo
+                            .findByBookBookIdAndStatus(existing.getBook().getBookId(), "Pending");
+                    for (BookRentalRequest pending : pendingRequests) {
+                        if (!pending.getRentalId().equals(existing.getRentalId())) {
+                            pending.setStatus("Rejected");
+                            // Add a generic rejection comment for clarity
+                            pending.setComments(pending.getComments() != null
+                                    ? pending.getComments() + " [Auto-Rejected: Book already approved for another user]"
+                                    : "[Auto-Rejected: Book already approved for another user]");
+                            rentalRequestRepo.save(pending);
+                        }
+                    }
                 }
             }
             existing.setStatus(requestDTO.status());

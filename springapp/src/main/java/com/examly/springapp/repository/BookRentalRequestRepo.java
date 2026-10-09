@@ -12,4 +12,5 @@ public interface BookRentalRequestRepo extends JpaRepository<BookRentalRequest, 
     List<BookRentalRequest> findByBookBookId(Long bookId);
     boolean existsByUserUserIdAndBookBookIdAndStatusIn(Long userId, Long bookId, List<String> statuses);
     boolean existsByBookBookIdAndStatusIn(Long bookId, List<String> statuses);
+    List<BookRentalRequest> findByBookBookIdAndStatus(Long bookId, String status);
 }

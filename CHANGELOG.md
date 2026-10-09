@@ -17,3 +17,16 @@
 ### Changed
 - Refactored `RegisterRequestDTO.java` to require `otp` field for validating registration requests.
 - Updated UI styles globally for a modern design aesthetic.
+- Redesigned Feedback UI (User and Admin views) from table layouts to a modern CSS Grid-based card layout.
+- Integrated dynamic 1-5 star rating visualization in Feedback cards.
+- Added display of book titles within feedback cards for better context.
+- Replaced the hardcoded homepage library illustration with a lightweight CSS-based dashboard mock visual.
+- Made the homepage statistics dynamic by fetching real data from the backend.
+- Converted the `Genre` text input in the Admin Add Book form to a dropdown (`select`) with 10 predefined genres.
+- Updated the User Book Rental Request form to allow selecting both a "Rental Date (From)" and "Return Date (To)".
+- Implemented strict date range validation in the Book Rental Request form to prevent past dates and ensure the return date is strictly after the rental date.
+- Added backend auto-rejection logic: when an Admin approves a book rental request, all other pending requests for the same book are automatically rejected with a comment.
+
+### Added
+- Added `rating` and `bookRentalRequest` fields to the `Feedback` model to support the new feedback features.
+- Created `StatsController` backend endpoint (`/api/stats`) to serve dynamic dashboard metrics without breaking existing APIs.

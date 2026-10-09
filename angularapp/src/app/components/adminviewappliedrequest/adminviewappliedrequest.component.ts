@@ -69,8 +69,9 @@ export class AdminviewappliedrequestComponent implements OnInit {
     const updated = { ...req, status: newStatus };
     this.rentalService.updateBookRentalRequest(req.rentalId, updated).subscribe({
       next: (res) => {
-        req.status = newStatus;
-        this.applyFilter();
+        // Reload all requests from the backend to instantly reflect 
+        // any auto-rejected competing requests for the same book.
+        this.loadRequests();
       }
     });
   }
