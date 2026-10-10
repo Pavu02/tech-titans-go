@@ -54,7 +54,12 @@ export class AdminviewbookComponent implements OnInit {
 
     if (this.searchTerm && this.searchTerm.trim() !== '') {
       const term = this.searchTerm.toLowerCase().trim();
-      result = result.filter((b) => b.title && b.title.toLowerCase().includes(term));
+      result = result.filter(
+        (b) =>
+          (b.title && b.title.toLowerCase().includes(term)) ||
+          (b.author && b.author.toLowerCase().includes(term)) ||
+          (b.genre && b.genre.toLowerCase().includes(term))
+      );
     }
 
     if (this.selectedGenre && this.selectedGenre !== 'All Genres') {

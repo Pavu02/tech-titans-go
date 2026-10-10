@@ -19,6 +19,7 @@
             id="requestDate"
             type="date"
             formControlName="requestDate"
+            [min]="minDate"
             class="form-control"
             [class.input-error]="rentalForm.get('requestDate')?.invalid && rentalForm.get('requestDate')?.touched"
           />
@@ -34,6 +35,7 @@
             id="returnDate"
             type="date"
             formControlName="returnDate"
+            [min]="minDate"
             class="form-control"
             [class.input-error]="(rentalForm.get('returnDate')?.invalid || rentalForm.hasError('invalidRange')) && rentalForm.get('returnDate')?.touched"
           />
