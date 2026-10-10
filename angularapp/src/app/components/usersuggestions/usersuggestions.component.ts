@@ -44,6 +44,6 @@ export class UsersuggestionsComponent implements OnInit {
   }
   
   rentBook(bookId: number): void {
-    this.router.navigate(['/useraddrequest', bookId]);
+    this.router.navigate(['/useraddrequest'], { queryParams: { bookId: bookId } });
   }
 }

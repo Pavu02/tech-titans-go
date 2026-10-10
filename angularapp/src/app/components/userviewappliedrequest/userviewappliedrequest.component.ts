@@ -141,6 +141,39 @@ export class UserviewappliedrequestComponent implements OnInit {
     this.selectedRequest = req;
   }
 
+  getRentalDays(req: BookRentalRequest): number {
+    if (!req.requestDate || !req.returnDate) return 0;
+    const [sy, sm, sd] = req.requestDate.split('-');
+    const [ey, em, ed] = req.returnDate.split('-');
+    const start = new Date(+sy, +sm - 1, +sd);
+    const end = new Date(+ey, +em - 1, +ed);
+    const diffTime = end.getTime() - start.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return diffDays > 0 ? diffDays : 1;
+  }
+
+  getEstimatedFine(req: BookRentalRequest): number {
+    if (!req.returnDate || req.status?.toLowerCase() === 'returned' || req.status?.toLowerCase() === 'rejected' || req.status?.toLowerCase() === 'pending') return 0;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const [ey, em, ed] = req.returnDate.split('-');
+    const returnDate = new Date(+ey, +em - 1, +ed);
+    returnDate.setHours(0, 0, 0, 0);
+
+    if (today > returnDate) {
+      const diffTime = today.getTime() - returnDate.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays * 10; // 10 INR per day
+    }
+    return 0;
+  }
+
+  getFinalAmount(req: BookRentalRequest): number {
+    const base = req.totalRentalAmount || 0;
+    const fine = req.status?.toLowerCase() === 'returned' ? (req.fineAmount || 0) : this.getEstimatedFine(req);
+    return base + fine;
+  }
+
   closeDetailsModal(): void {
     this.selectedRequest = null;
   }

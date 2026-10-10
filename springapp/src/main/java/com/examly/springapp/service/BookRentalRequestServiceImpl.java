@@ -22,14 +22,16 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
     private final UserRepo userRepo;
     private final BookRepo bookRepo;
     private final BookRentalRequestMapper requestMapper;
+    private final EmailService emailService;
 
     // Constructor Injection
     public BookRentalRequestServiceImpl(BookRentalRequestRepo rentalRequestRepo, UserRepo userRepo, BookRepo bookRepo,
-            BookRentalRequestMapper requestMapper) {
+            BookRentalRequestMapper requestMapper, EmailService emailService) {
         this.rentalRequestRepo = rentalRequestRepo;
         this.userRepo = userRepo;
         this.bookRepo = bookRepo;
         this.requestMapper = requestMapper;
+        this.emailService = emailService;
     }
 
     @Override
@@ -76,9 +78,11 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
             return null;
         }
 
+        String prevStatus = existing.getStatus();
+
         if (requestDTO.status() != null) {
             if ("Approved".equalsIgnoreCase(requestDTO.status())
-                    && !"Approved".equalsIgnoreCase(existing.getStatus())) {
+                    && !"Approved".equalsIgnoreCase(prevStatus)) {
                 if (existing.getBook() != null) {
                     boolean alreadyApproved = rentalRequestRepo.existsByBookBookIdAndStatusIn(
                             existing.getBook().getBookId(), Arrays.asList("Approved"));
@@ -109,6 +113,17 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
                     double amount = existing.getBook().getRentalFee() * days;
                     existing.setTotalRentalAmount(amount);
                 }
+
+                if (existing.getUser() != null && existing.getUser().getEmail() != null) {
+                    String body = "Your rental request for '" + existing.getBook().getTitle() + "' has been APPROVED.\n" +
+                                  "Please proceed to pay the initial rental amount of ₹" + existing.getTotalRentalAmount() + " on the portal.";
+                    emailService.sendEmail(existing.getUser().getEmail(), "Rental Request Approved", body);
+                }
+            } else if ("Rejected".equalsIgnoreCase(requestDTO.status()) && !"Rejected".equalsIgnoreCase(existing.getStatus())) {
+                if (existing.getUser() != null && existing.getUser().getEmail() != null) {
+                    String body = "Your rental request for '" + existing.getBook().getTitle() + "' has been REJECTED.";
+                    emailService.sendEmail(existing.getUser().getEmail(), "Rental Request Rejected", body);
+                }
             }
             existing.setStatus(requestDTO.status());
         }
@@ -123,7 +138,9 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
         }
 
         // On return, verify payment is PAID and calculate late fine
-        if ("Returned".equalsIgnoreCase(existing.getStatus())) {
+        boolean wasNotReturned = !"Returned".equalsIgnoreCase(prevStatus);
+        
+        if ("Returned".equalsIgnoreCase(requestDTO.status()) && wasNotReturned) {
             if (!"PAID".equalsIgnoreCase(existing.getPaymentStatus())) {
                 throw new IllegalArgumentException("Cannot mark as returned until payment is PAID.");
             }
@@ -133,6 +150,24 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
                     long overdueDays = java.time.temporal.ChronoUnit.DAYS.between(existing.getReturnDate(), today);
                     existing.setFineAmount(overdueDays * 10.0);
                 }
+            }
+            
+            if (existing.getUser() != null && existing.getUser().getEmail() != null) {
+                double finalAmount = (existing.getTotalRentalAmount() != null ? existing.getTotalRentalAmount() : 0.0) 
+                                   + (existing.getFineAmount() != null ? existing.getFineAmount() : 0.0);
+                long days = java.time.temporal.ChronoUnit.DAYS.between(existing.getRequestDate(), existing.getReturnDate()) + 1;
+                if (days < 1) days = 1;
+
+                String body = "Thank you for returning the book: '" + existing.getBook().getTitle() + "'.\n\n" +
+                              "Rental Details:\n" +
+                              "- Duration: " + days + " days\n" +
+                              "- Daily Rate: ₹" + existing.getBook().getRentalFee() + "\n" +
+                              "- Base Amount: ₹" + existing.getTotalRentalAmount() + "\n" +
+                              "- Late Fine: ₹" + (existing.getFineAmount() != null ? existing.getFineAmount() : 0.0) + "\n" +
+                              "- Final Amount: ₹" + finalAmount + "\n" +
+                              "- Payment Status: " + existing.getPaymentStatus() + "\n\n" +
+                              "We hope you enjoyed reading!";
+                emailService.sendEmail(existing.getUser().getEmail(), "Book Returned Confirmation", body);
             }
         }
 

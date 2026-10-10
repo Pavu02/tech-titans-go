@@ -52,9 +52,15 @@
           </td>
           <td>
             <div *ngIf="req.status?.toLowerCase() !== 'pending' && req.totalRentalAmount">
-              <span style="font-weight: 600; color: var(--primary);">₹{{ req.totalRentalAmount }}</span>
-              <div *ngIf="req.status?.toLowerCase() === 'returned' && req.fineAmount && req.fineAmount > 0" style="color: red; font-size: 0.85em; margin-top: 4px;">
-                + ₹{{ req.fineAmount }} Fine
+              <div style="font-size: 0.85em; color: #666;">Base: ₹{{ req.totalRentalAmount }}</div>
+              <div *ngIf="req.status?.toLowerCase() === 'returned' && req.fineAmount && req.fineAmount > 0" style="color: red; font-size: 0.85em; margin-top: 2px;">
+                Fine: ₹{{ req.fineAmount }}
+              </div>
+              <div *ngIf="getEstimatedFine(req) > 0" style="color: red; font-size: 0.85em; margin-top: 2px;">
+                Est. Fine: ₹{{ getEstimatedFine(req) }}
+              </div>
+              <div style="font-weight: 600; color: var(--primary); margin-top: 4px;">
+                Total: ₹{{ getFinalAmount(req) }}
               </div>
             </div>
             <span *ngIf="req.status?.toLowerCase() === 'pending' || !req.totalRentalAmount" class="text-muted">

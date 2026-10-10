@@ -43,10 +43,19 @@
             </span>
           </td>
           <td>
-            <span *ngIf="req.status?.toLowerCase() === 'returned' && req.totalRentalAmount">
-              ₹{{ req.totalRentalAmount }}
-            </span>
-            <span *ngIf="!(req.status?.toLowerCase() === 'returned' && req.totalRentalAmount)">
+            <div *ngIf="req.status?.toLowerCase() !== 'pending' && req.totalRentalAmount">
+              <div style="font-size: 0.85em; color: #666;">Base: ₹{{ req.totalRentalAmount }}</div>
+              <div *ngIf="req.status?.toLowerCase() === 'returned' && req.fineAmount && req.fineAmount > 0" style="color: red; font-size: 0.85em; margin-top: 2px;">
+                Fine: ₹{{ req.fineAmount }}
+              </div>
+              <div *ngIf="getEstimatedFine(req) > 0" style="color: red; font-size: 0.85em; margin-top: 2px;">
+                Est. Fine: ₹{{ getEstimatedFine(req) }}
+              </div>
+              <div style="font-weight: 600; color: var(--primary); margin-top: 4px;">
+                Total: ₹{{ getFinalAmount(req) }}
+              </div>
+            </div>
+            <span *ngIf="req.status?.toLowerCase() === 'pending' || !req.totalRentalAmount" class="text-muted">
               -
             </span>
           </td>
@@ -92,6 +101,12 @@
     <button class="modal-close-btn" (click)="closeDetailsModal()">×</button>
     <h3 class="modal-title">Request Details</h3>
     
+    <div style="text-align: center; margin-bottom: 20px;">
+      <img [src]="selectedRequest.book?.coverImage || 'assets/images/background.svg'" 
+           alt="Book Cover" 
+           style="max-width: 120px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    </div>
+    
     <div class="details-grid">
       <div class="detail-item">
         <span class="detail-label">Book Title</span>
@@ -125,19 +140,40 @@
         <span class="detail-label">Comments</span>
         <span class="detail-value">{{ selectedRequest.comments }}</span>
       </div>
-      <div class="detail-item full-width" *ngIf="selectedRequest.status?.toLowerCase() !== 'pending' && selectedRequest.totalRentalAmount">
-        <span class="detail-label" style="color: var(--primary);">Initial Rental Cost</span>
-        <span class="detail-value" style="font-size: 1.2em; color: var(--primary);">₹{{ selectedRequest.totalRentalAmount }}</span>
-      </div>
-      <div class="detail-item full-width" *ngIf="selectedRequest.paymentStatus">
-        <span class="detail-label">Payment Status</span>
-        <span class="badge" [ngClass]="selectedRequest.paymentStatus === 'PAID' ? 'badge-approved' : 'badge-pending'">
-          {{ selectedRequest.paymentStatus }}
-        </span>
-      </div>
-      <div class="detail-item full-width" *ngIf="selectedRequest.status?.toLowerCase() === 'returned' && selectedRequest.fineAmount && selectedRequest.fineAmount > 0">
-        <span class="detail-label" style="color: red;">Late Fine Assessed</span>
-        <span class="detail-value" style="font-size: 1.2em; color: red;">₹{{ selectedRequest.fineAmount }}</span>
+      <div class="detail-item full-width" *ngIf="selectedRequest.status?.toLowerCase() !== 'pending'">
+        <h4 style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Detailed Rental Bill</h4>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+          <span>Daily Rental Rate:</span>
+          <span>₹{{ selectedRequest.book?.rentalFee || selectedRequest.rentalFee }} / day</span>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+          <span>Billable Days ({{ selectedRequest.requestDate }} to {{ selectedRequest.returnDate }}):</span>
+          <span>{{ getRentalDays(selectedRequest) }} days</span>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold;">
+          <span>Base Rental Amount:</span>
+          <span>₹{{ selectedRequest.totalRentalAmount || 0 }}</span>
+        </div>
+
+        <div *ngIf="getEstimatedFine(selectedRequest) > 0 || (selectedRequest.status?.toLowerCase() === 'returned' && selectedRequest.fineAmount && selectedRequest.fineAmount > 0)" style="display: flex; justify-content: space-between; margin-bottom: 5px; color: red;">
+          <span>Late Fine (10 INR/day overdue):</span>
+          <span>+ ₹{{ selectedRequest.status?.toLowerCase() === 'returned' ? selectedRequest.fineAmount : getEstimatedFine(selectedRequest) }}</span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc; font-weight: bold; font-size: 1.1em; color: var(--primary);">
+          <span>Final Amount Payable:</span>
+          <span>₹{{ getFinalAmount(selectedRequest) }}</span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+          <span>Payment Status:</span>
+          <span class="badge" [ngClass]="selectedRequest.paymentStatus === 'PAID' ? 'badge-approved' : 'badge-pending'">
+            {{ selectedRequest.paymentStatus || 'PENDING' }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
