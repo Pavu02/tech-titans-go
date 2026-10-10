@@ -36,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/request-otp")
     public ResponseEntity<?> requestOtp(@Valid @RequestBody com.examly.springapp.dto.OtpRequestDTO requestDTO) {
-        otpService.generateAndSendOtp(requestDTO.email());
+        otpService.generateAndSendOtp(requestDTO.email(), requestDTO.mobileNumber());
         Map<String, String> response = new HashMap<>();
         response.put("message", "OTP sent successfully to " + requestDTO.email());
         return ResponseEntity.ok(response);
@@ -45,7 +45,7 @@ public class AuthController {
     @PostMapping("/forgot-password/request-otp")
     public ResponseEntity<?> forgotPasswordRequestOtp(@Valid @RequestBody com.examly.springapp.dto.OtpRequestDTO requestDTO) {
         if (userRepo.existsByEmail(requestDTO.email())) {
-            otpService.generateAndSendOtp(requestDTO.email());
+            otpService.generateAndSendOtp(requestDTO.email(), null);
         }
         Map<String, String> response = new HashMap<>();
         response.put("message", "If the email is registered, an OTP has been sent.");
@@ -97,7 +97,15 @@ public class AuthController {
         if (registerDTO.otp() != null && !registerDTO.otp().isEmpty()) {
             if (!otpService.validateOtp(registerDTO.email(), registerDTO.otp())) {
                 Map<String, String> err = new HashMap<>();
-                err.put("message", "Invalid or expired OTP");
+                err.put("message", "Invalid or expired Email OTP");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+            }
+        }
+
+        if (registerDTO.mobileOtp() != null && !registerDTO.mobileOtp().isEmpty()) {
+            if (!otpService.validateMobileOtp(registerDTO.mobileNumber(), registerDTO.mobileOtp())) {
+                Map<String, String> err = new HashMap<>();
+                err.put("message", "Invalid or expired Mobile OTP");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
             }
         }

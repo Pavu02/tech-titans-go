@@ -39,7 +39,7 @@
             />
             <div *ngIf="isSubmitted && signupForm.get('mobileNumber')?.errors as errors" class="error-text">
               <span *ngIf="errors['required']">Mobile is required</span>
-              <span *ngIf="errors['pattern']">Must be 10 digits</span>
+              <span *ngIf="errors['pattern']">Invalid mobile number format</span>
             </div>
           </div>
         </div>
@@ -118,19 +118,31 @@
 <!-- OTP Verification Modal -->
 <div class="modal-overlay" *ngIf="showOtpModal">
   <div class="modal-box">
-    <h3 class="modal-title">Verify Email</h3>
-    <p class="modal-message">We've sent a 6-digit OTP to your email address.</p>
+    <h3 class="modal-title">Verify Email & Mobile</h3>
+    <p class="modal-message">We've sent a 6-digit OTP to your email and mobile number.</p>
     
     <div *ngIf="otpError" class="alert-error">
       {{ otpError }}
     </div>
 
     <div class="form-group">
+      <label>Email OTP</label>
       <input 
         type="text" 
         [(ngModel)]="otpValue" 
-        placeholder="Enter 6-digit OTP" 
+        placeholder="Enter 6-digit Email OTP" 
         class="form-control text-center otp-input" 
+        maxlength="6"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Mobile OTP</label>
+      <input 
+        type="text" 
+        [(ngModel)]="mobileOtpValue" 
+        placeholder="Enter 6-digit Mobile OTP" 
+        class="form-control text-center otp-input mt-2" 
         maxlength="6"
       />
     </div>

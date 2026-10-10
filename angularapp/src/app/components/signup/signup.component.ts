@@ -15,6 +15,7 @@ export class SignupComponent implements OnInit {
   showOtpModal: boolean = false;
   errorMessage: string = '';
   otpValue: string = '';
+  mobileOtpValue: string = '';
   otpError: string = '';
 
   constructor(
@@ -28,7 +29,7 @@ export class SignupComponent implements OnInit {
       {
         username: ['', Validators.required],
         email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
-        mobileNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+        mobileNumber: ['', [Validators.required, Validators.pattern(/^\+?\d{10,15}$/)]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required]
       },
@@ -54,8 +55,9 @@ export class SignupComponent implements OnInit {
     }
 
     const email = this.signupForm.get('email')?.value;
+    const mobileNumber = this.signupForm.get('mobileNumber')?.value;
 
-    this.authService.requestOtp(email).subscribe({
+    this.authService.requestOtp(email, mobileNumber).subscribe({
       next: () => {
         this.showOtpModal = true;
       },
@@ -72,13 +74,13 @@ export class SignupComponent implements OnInit {
   }
 
   verifyOtpAndRegister(): void {
-    if (!this.otpValue || this.otpValue.length !== 6) {
-      this.otpError = 'Please enter a valid 6-digit OTP';
+    if (!this.otpValue || this.otpValue.length !== 6 || !this.mobileOtpValue || this.mobileOtpValue.length !== 6) {
+      this.otpError = 'Please enter valid 6-digit OTPs for both Email and Mobile';
       return;
     }
     
     this.otpError = '';
-    const userData = { ...this.signupForm.value, otp: this.otpValue };
+    const userData = { ...this.signupForm.value, otp: this.otpValue, mobileOtp: this.mobileOtpValue };
 
     this.authService.register(userData).subscribe({
       next: () => {
@@ -101,6 +103,7 @@ export class SignupComponent implements OnInit {
   closeOtpModal(): void {
     this.showOtpModal = false;
     this.otpValue = '';
+    this.mobileOtpValue = '';
     this.otpError = '';
   }
 

@@ -6,5 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 public record OtpRequestDTO(
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
-    String email
+    String email,
+    String mobileNumber
 ) {}

@@ -17,8 +17,9 @@ public record RegisterRequestDTO(
     String username,
     
     @NotBlank(message = "Mobile number is required")
-    @Pattern(regexp = "^[0-9]{10}$", message = "Mobile number should be exactly 10 digits")
+    @Pattern(regexp = "^\\+?\\d{10,15}$", message = "Mobile number should be 10-15 digits")
     String mobileNumber,
 
-    String otp
+    String otp,
+    String mobileOtp
 ) {}
