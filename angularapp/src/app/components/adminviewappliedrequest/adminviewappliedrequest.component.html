@@ -28,6 +28,7 @@
           <th>Book Title</th>
           <th>Request Date</th>
           <th>Status</th>
+          <th>Payment</th>
           <th>Total Cost</th>
           <th>Actions</th>
         </tr>
@@ -45,10 +46,18 @@
             </span>
           </td>
           <td>
-            <span *ngIf="req.status?.toLowerCase() === 'returned' && req.totalRentalAmount" style="font-weight: 600; color: var(--primary);">
-              ₹{{ req.totalRentalAmount }}
+            <span class="badge" [ngClass]="req.paymentStatus === 'PAID' ? 'badge-approved' : 'badge-pending'">
+              {{ req.paymentStatus || 'PENDING' }}
             </span>
-            <span *ngIf="req.status?.toLowerCase() !== 'returned' || !req.totalRentalAmount" class="text-muted">
+          </td>
+          <td>
+            <div *ngIf="req.status?.toLowerCase() !== 'pending' && req.totalRentalAmount">
+              <span style="font-weight: 600; color: var(--primary);">₹{{ req.totalRentalAmount }}</span>
+              <div *ngIf="req.status?.toLowerCase() === 'returned' && req.fineAmount && req.fineAmount > 0" style="color: red; font-size: 0.85em; margin-top: 4px;">
+                + ₹{{ req.fineAmount }} Fine
+              </div>
+            </div>
+            <span *ngIf="req.status?.toLowerCase() === 'pending' || !req.totalRentalAmount" class="text-muted">
               -
             </span>
           </td>
@@ -56,7 +65,13 @@
             <div class="action-btn-group">
               <button class="btn btn-success btn-sm" *ngIf="req.status?.toLowerCase() === 'pending'" (click)="updateStatus(req, 'Approved')">Approve</button>
               <button class="btn btn-danger btn-sm" *ngIf="req.status?.toLowerCase() === 'pending'" (click)="updateStatus(req, 'Rejected')">Reject</button>
-              <button class="btn btn-primary btn-sm" *ngIf="req.status?.toLowerCase() === 'approved'" (click)="updateStatus(req, 'Returned')">Mark Returned</button>
+              <button class="btn btn-primary btn-sm" 
+                      *ngIf="req.status?.toLowerCase() === 'approved'" 
+                      [disabled]="req.paymentStatus !== 'PAID'"
+                      [title]="req.paymentStatus !== 'PAID' ? 'Waiting for user payment' : ''"
+                      (click)="updateStatus(req, 'Returned')">
+                Mark Returned
+              </button>
               <span class="text-muted" *ngIf="req.status?.toLowerCase() === 'rejected' || req.status?.toLowerCase() === 'returned'">No action</span>
             </div>
           </td>

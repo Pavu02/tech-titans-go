@@ -52,6 +52,16 @@
           </td>
           <td class="action-cell">
             <div class="action-btn-group">
+              <button class="btn btn-success btn-sm"
+                      *ngIf="req.status?.toLowerCase() === 'approved' && req.paymentStatus !== 'PAID'"
+                      (click)="payForRental(req)">
+                Pay ₹{{ req.totalRentalAmount }}
+              </button>
+              <button class="btn btn-success btn-sm"
+                      *ngIf="req.paymentStatus === 'PAID'"
+                      disabled>
+                PAID
+              </button>
               <button class="btn btn-primary btn-sm" 
                       *ngIf="req.status?.toLowerCase() === 'returned'"
                       [disabled]="req.rentalId && reviewedRentalIds.has(req.rentalId)"
@@ -115,9 +125,19 @@
         <span class="detail-label">Comments</span>
         <span class="detail-value">{{ selectedRequest.comments }}</span>
       </div>
-      <div class="detail-item full-width" *ngIf="selectedRequest.status?.toLowerCase() === 'returned' && selectedRequest.totalRentalAmount">
-        <span class="detail-label" style="color: var(--primary);">Total Rental Cost</span>
+      <div class="detail-item full-width" *ngIf="selectedRequest.status?.toLowerCase() !== 'pending' && selectedRequest.totalRentalAmount">
+        <span class="detail-label" style="color: var(--primary);">Initial Rental Cost</span>
         <span class="detail-value" style="font-size: 1.2em; color: var(--primary);">₹{{ selectedRequest.totalRentalAmount }}</span>
+      </div>
+      <div class="detail-item full-width" *ngIf="selectedRequest.paymentStatus">
+        <span class="detail-label">Payment Status</span>
+        <span class="badge" [ngClass]="selectedRequest.paymentStatus === 'PAID' ? 'badge-approved' : 'badge-pending'">
+          {{ selectedRequest.paymentStatus }}
+        </span>
+      </div>
+      <div class="detail-item full-width" *ngIf="selectedRequest.status?.toLowerCase() === 'returned' && selectedRequest.fineAmount && selectedRequest.fineAmount > 0">
+        <span class="detail-label" style="color: red;">Late Fine Assessed</span>
+        <span class="detail-value" style="font-size: 1.2em; color: red;">₹{{ selectedRequest.fineAmount }}</span>
       </div>
     </div>
   </div>

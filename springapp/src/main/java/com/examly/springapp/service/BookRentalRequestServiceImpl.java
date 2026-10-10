@@ -100,6 +100,15 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
                         }
                     }
                 }
+                
+                // Calculate initial rental amount upon approval
+                if (existing.getBook() != null && existing.getBook().getRentalFee() != null
+                        && existing.getRequestDate() != null && existing.getReturnDate() != null) {
+                    long days = java.time.temporal.ChronoUnit.DAYS.between(existing.getRequestDate(), existing.getReturnDate()) + 1;
+                    if (days < 1) days = 1;
+                    double amount = existing.getBook().getRentalFee() * days;
+                    existing.setTotalRentalAmount(amount);
+                }
             }
             existing.setStatus(requestDTO.status());
         }
@@ -113,14 +122,17 @@ public class BookRentalRequestServiceImpl implements BookRentalRequestService {
             existing.setRequestDate(requestDTO.requestDate());
         }
 
-        // Calculate final rental payment exactly once when the book is returned
-        if ("Returned".equalsIgnoreCase(existing.getStatus()) && existing.getTotalRentalAmount() == null) {
-            if (existing.getBook() != null && existing.getBook().getRentalFee() != null
-                    && existing.getRequestDate() != null && existing.getReturnDate() != null) {
-                long days = java.time.temporal.ChronoUnit.DAYS.between(existing.getRequestDate(), existing.getReturnDate()) + 1;
-                if (days < 1) days = 1;
-                double amount = existing.getBook().getRentalFee() * days;
-                existing.setTotalRentalAmount(amount);
+        // On return, verify payment is PAID and calculate late fine
+        if ("Returned".equalsIgnoreCase(existing.getStatus())) {
+            if (!"PAID".equalsIgnoreCase(existing.getPaymentStatus())) {
+                throw new IllegalArgumentException("Cannot mark as returned until payment is PAID.");
+            }
+            if (existing.getReturnDate() != null) {
+                LocalDate today = LocalDate.now();
+                if (today.isAfter(existing.getReturnDate())) {
+                    long overdueDays = java.time.temporal.ChronoUnit.DAYS.between(existing.getReturnDate(), today);
+                    existing.setFineAmount(overdueDays * 10.0);
+                }
             }
         }
 

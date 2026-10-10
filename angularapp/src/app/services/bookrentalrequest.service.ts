@@ -54,4 +54,22 @@ export class BookrentalrequestService {
       headers: this.getHeaders()
     });
   }
+
+  processMockPayment(rentalId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/api/payment/mock/${rentalId}`, {}, {
+      headers: this.getHeaders()
+    });
+  }
+
+  createOrder(rentalId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/api/payment/create-order/${rentalId}`, {}, {
+      headers: this.getHeaders()
+    });
+  }
+
+  verifyPayment(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/api/payment/verify`, data, {
+      headers: this.getHeaders()
+    });
+  }
 }

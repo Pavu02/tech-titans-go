@@ -20,4 +20,6 @@ export interface BookRentalRequest {
   coverImage?: string;
   description?: string;
   totalRentalAmount?: number;
+  paymentStatus?: string;
+  fineAmount?: number;
 }

@@ -32,6 +32,14 @@ public class BookRentalRequest {
 
     private Double totalRentalAmount;
 
+    private String paymentStatus = "PENDING"; // PENDING, PAID
+
+    private Double fineAmount = 0.0;
+    
+    private String razorpayOrderId;
+    
+    private String razorpayPaymentId;
+
     public BookRentalRequest() {
     }
 
@@ -108,5 +116,37 @@ public class BookRentalRequest {
 
     public void setTotalRentalAmount(Double totalRentalAmount) {
         this.totalRentalAmount = totalRentalAmount;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public Double getFineAmount() {
+        return fineAmount;
+    }
+
+    public void setFineAmount(Double fineAmount) {
+        this.fineAmount = fineAmount;
+    }
+
+    public String getRazorpayOrderId() {
+        return razorpayOrderId;
+    }
+
+    public void setRazorpayOrderId(String razorpayOrderId) {
+        this.razorpayOrderId = razorpayOrderId;
+    }
+
+    public String getRazorpayPaymentId() {
+        return razorpayPaymentId;
+    }
+
+    public void setRazorpayPaymentId(String razorpayPaymentId) {
+        this.razorpayPaymentId = razorpayPaymentId;
     }
 }

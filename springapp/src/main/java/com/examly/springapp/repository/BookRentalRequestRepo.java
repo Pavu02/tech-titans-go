@@ -13,4 +13,5 @@ public interface BookRentalRequestRepo extends JpaRepository<BookRentalRequest, 
     boolean existsByUserUserIdAndBookBookIdAndStatusIn(Long userId, Long bookId, List<String> statuses);
     boolean existsByBookBookIdAndStatusIn(Long bookId, List<String> statuses);
     List<BookRentalRequest> findByBookBookIdAndStatus(Long bookId, String status);
+    java.util.Optional<BookRentalRequest> findByRazorpayOrderId(String razorpayOrderId);
 }

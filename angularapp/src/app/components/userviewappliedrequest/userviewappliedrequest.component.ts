@@ -5,6 +5,8 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { FeedbackService } from '../../services/feedback.service';
 
+declare var Razorpay: any;
+
 @Component({
   selector: 'app-userviewappliedrequest',
   templateUrl: './userviewappliedrequest.component.html',
@@ -80,6 +82,59 @@ export class UserviewappliedrequestComponent implements OnInit {
 
   giveFeedback(req: BookRentalRequest): void {
     this.router.navigate(['/useraddfeedback'], { queryParams: { rentalId: req.rentalId } });
+  }
+
+  payForRental(req: BookRentalRequest): void {
+    if (req.rentalId) {
+      this.rentalService.createOrder(req.rentalId).subscribe({
+        next: (orderRes) => {
+          if (orderRes.status === 'PAID') {
+            alert('Mock Payment Successful!');
+            this.loadUserRequests();
+            return;
+          }
+
+          const options = {
+            key: orderRes.keyId,
+            amount: orderRes.amount,
+            currency: orderRes.currency,
+            name: 'Tech Titans Go Library',
+            description: 'Book Rental Payment',
+            order_id: orderRes.orderId,
+            handler: (response: any) => {
+              this.verifyPayment(response);
+            },
+            prefill: {
+              name: req.user?.username || req.username || 'User',
+              email: req.user?.email || 'user@example.com'
+            },
+            theme: {
+              color: '#3f51b5'
+            }
+          };
+          const rzp = new Razorpay(options);
+          rzp.on('payment.failed', function (response: any) {
+             alert('Payment Failed!');
+          });
+          rzp.open();
+        },
+        error: (err) => {
+          alert(err.error?.message || 'Payment Initialization Failed!');
+        }
+      });
+    }
+  }
+
+  verifyPayment(response: any): void {
+    this.rentalService.verifyPayment(response).subscribe({
+      next: (res) => {
+        alert('Payment Successful!');
+        this.loadUserRequests();
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Payment Verification Failed!');
+      }
+    });
   }
 
   showMore(req: BookRentalRequest): void {
