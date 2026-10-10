@@ -16,10 +16,12 @@ import java.util.Optional;
 public class BookRentalRequestController {
 
     private final BookRentalRequestService rentalRequestService;
+    private final com.examly.springapp.repository.UserRepo userRepo;
 
     // Constructor Injection
-    public BookRentalRequestController(BookRentalRequestService rentalRequestService) {
+    public BookRentalRequestController(BookRentalRequestService rentalRequestService, com.examly.springapp.repository.UserRepo userRepo) {
         this.rentalRequestService = rentalRequestService;
+        this.userRepo = userRepo;
     }
 
     @PostMapping
@@ -45,7 +47,18 @@ public class BookRentalRequestController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<BookRentalRequest>> getRentalRequestsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<?> getRentalRequestsByUserId(@PathVariable Long userId) {
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ADMIN"));
+        
+        if (!isAdmin) {
+            String email = auth.getName();
+            java.util.Optional<com.examly.springapp.model.User> loggedInUser = userRepo.findByEmail(email);
+            if (loggedInUser.isEmpty() || !loggedInUser.get().getUserId().equals(userId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            }
+        }
+
         List<BookRentalRequest> list = rentalRequestService.getBookRentalRequestsByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(list);
         // Returns 200

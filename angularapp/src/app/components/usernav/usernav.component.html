@@ -12,9 +12,9 @@
           <div class="dropdown-menu" *ngIf="showBooksDropdown">
             <a routerLink="/userviewbooks" (click)="toggleBooksDropdown(false)">Browse Books</a>
             <a routerLink="/userviewappliedrequest" (click)="toggleBooksDropdown(false)">My Rentals</a>
-            <a routerLink="/usersuggestions" (click)="toggleBooksDropdown(false)">✨ AI Suggestions</a>
           </div>
         </li>
+        <li><a routerLink="/usersuggestions" routerLinkActive="active">AI Suggestions</a></li>
         <li class="dropdown-container" (mouseenter)="toggleFeedbackDropdown(true)" (mouseleave)="toggleFeedbackDropdown(false)">
           <a class="dropdown-trigger" [class.active]="showFeedbackDropdown">Feedback <span class="chevron">▾</span></a>
           <div class="dropdown-menu" *ngIf="showFeedbackDropdown">
@@ -26,11 +26,15 @@
     </div>
 
     <div class="nav-actions">
-      <div class="user-profile">
+      <div class="user-profile dropdown-container" (mouseenter)="showProfileDetails = true" (mouseleave)="showProfileDetails = false">
         <div class="avatar">{{ username.charAt(0) | uppercase }}</div>
         <div class="user-details">
           <span class="user-name">{{ username }}</span>
           <span class="user-role">{{ userRole }}</span>
+        </div>
+        <div class="dropdown-menu profile-dropdown" *ngIf="showProfileDetails">
+          <div class="profile-info-item"><strong>Email:</strong> {{ userEmail }}</div>
+          <div class="profile-info-item"><strong>Mobile:</strong> {{ userMobile }}</div>
         </div>
       </div>
       <button class="btn btn-outline btn-sm logout-btn" (click)="openLogoutModal()">Log Out</button>

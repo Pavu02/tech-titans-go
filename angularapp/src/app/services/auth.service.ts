@@ -24,7 +24,7 @@ export class AuthService {
   private loggedInSubject = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
   public isLoggedIn$ = this.loggedInSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   requestOtp(email: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/api/request-otp`, { email });
@@ -62,6 +62,9 @@ export class AuthService {
           if (res.email) {
             localStorage.setItem('email', res.email);
           }
+          if (res.mobileNumber) {
+            localStorage.setItem('mobileNumber', res.mobileNumber);
+          }
           this.loggedInSubject.next(true);
         }
       })
@@ -74,6 +77,7 @@ export class AuthService {
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
     localStorage.removeItem('email');
+    localStorage.removeItem('mobileNumber');
     this.roleSubject.next(null);
     this.userIdSubject.next(null);
     this.usernameSubject.next(null);
@@ -95,6 +99,14 @@ export class AuthService {
 
   getUsername(): string | null {
     return localStorage.getItem('username');
+  }
+
+  getEmail(): string | null {
+    return localStorage.getItem('email');
+  }
+
+  getMobileNumber(): string | null {
+    return localStorage.getItem('mobileNumber');
   }
 
   isAuthenticated(): boolean {

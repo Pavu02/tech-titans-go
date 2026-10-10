@@ -24,6 +24,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { UsersuggestionsComponent } from './components/usersuggestions/usersuggestions.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { AdmindashboardComponent } from './components/admindashboard/admindashboard.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
     ErrorComponent,
     ChatbotComponent,
     UsersuggestionsComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    AdmindashboardComponent
   ],
   imports: [
     BrowserModule,

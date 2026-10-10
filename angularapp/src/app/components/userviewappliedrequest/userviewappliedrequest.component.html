@@ -27,6 +27,7 @@
           <th>Book Title</th>
           <th>Request Date</th>
           <th>Status</th>
+          <th>Total Cost</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -39,6 +40,14 @@
           <td>
             <span class="badge" [ngClass]="'badge-' + req.status.toLowerCase()">
               {{ req.status }}
+            </span>
+          </td>
+          <td>
+            <span *ngIf="req.status?.toLowerCase() === 'returned' && req.totalRentalAmount">
+              ₹{{ req.totalRentalAmount }}
+            </span>
+            <span *ngIf="!(req.status?.toLowerCase() === 'returned' && req.totalRentalAmount)">
+              -
             </span>
           </td>
           <td class="action-cell">

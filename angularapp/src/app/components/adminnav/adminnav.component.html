@@ -20,11 +20,15 @@
     </div>
 
     <div class="nav-actions">
-      <div class="user-profile">
+      <div class="user-profile dropdown-container" (mouseenter)="showProfileDetails = true" (mouseleave)="showProfileDetails = false">
         <div class="avatar admin-avatar">{{ username.charAt(0) | uppercase }}</div>
         <div class="user-details">
           <span class="user-name">{{ username }}</span>
           <span class="user-role">{{ userRole }}</span>
+        </div>
+        <div class="dropdown-menu profile-dropdown" *ngIf="showProfileDetails">
+          <div class="profile-info-item"><strong>Email:</strong> {{ userEmail }}</div>
+          <div class="profile-info-item"><strong>Mobile:</strong> {{ userMobile }}</div>
         </div>
       </div>
       <button class="btn btn-outline btn-sm logout-btn" (click)="openLogoutModal()">Log Out</button>

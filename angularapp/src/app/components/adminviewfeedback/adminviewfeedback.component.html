@@ -22,6 +22,7 @@
           <span class="book-icon">📖</span> <span class="book-title">{{ fb.bookRentalRequest.book.title }}</span>
         </div>
         <p class="feedback-text">{{ fb.feedbackText }}</p>
+        <button class="btn btn-outline btn-sm mt-2" (click)="showProfile(fb)">View User</button>
       </div>
     </div>
   </div>
@@ -33,4 +34,28 @@
       <p>Users haven't submitted any feedback.</p>
     </div>
   </ng-template>
+
+  <!-- User Profile Modal -->
+  <div class="modal-overlay" *ngIf="showProfileModal">
+    <div class="modal-box profile-modal">
+      <button class="modal-close-btn" (click)="closeProfileModal()">×</button>
+      <div class="profile-header">
+        <div class="avatar-large">{{ selectedUser?.username?.charAt(0) | uppercase }}</div>
+        <h3 class="profile-name">{{ selectedUser?.username }}</h3>
+      </div>
+      <div class="profile-details">
+        <div class="detail-group">
+          <span class="detail-label">Email: </span>
+          <span class="detail-value">{{ selectedUser?.email }}</span>
+        </div>
+        <div class="detail-group">
+          <span class="detail-label">Mobile Number: </span>
+          <span class="detail-value">{{ selectedUser?.mobileNumber }}</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary w-100" (click)="closeProfileModal()">Close</button>
+      </div>
+    </div>
+  </div>
 </div>

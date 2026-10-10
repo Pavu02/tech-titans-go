@@ -16,10 +16,12 @@ import java.util.Optional;
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
+    private final com.examly.springapp.repository.UserRepo userRepo;
 
     // Constructor Injection
-    public FeedbackController(FeedbackService feedbackService) {
+    public FeedbackController(FeedbackService feedbackService, com.examly.springapp.repository.UserRepo userRepo) {
         this.feedbackService = feedbackService;
+        this.userRepo = userRepo;
     }
 
     @PostMapping
@@ -55,6 +57,17 @@ public class FeedbackController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getFeedbacksByUserId(@PathVariable Long userId) {
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ADMIN"));
+        
+        if (!isAdmin) {
+            String email = auth.getName();
+            java.util.Optional<com.examly.springapp.model.User> loggedInUser = userRepo.findByEmail(email);
+            if (loggedInUser.isEmpty() || !loggedInUser.get().getUserId().equals(userId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            }
+        }
+
         List<Feedback> list = feedbackService.getFeedbacksByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(list);
         // Returns 200

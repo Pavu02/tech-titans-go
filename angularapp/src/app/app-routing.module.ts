@@ -18,6 +18,8 @@ import { ErrorComponent } from './components/error/error.component';
 import { AuthGuard } from './components/authguard/auth.guard';
 import { UsersuggestionsComponent } from './components/usersuggestions/usersuggestions.component';
 
+import { AdmindashboardComponent } from './components/admindashboard/admindashboard.component';
+
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -28,6 +30,7 @@ const routes: Routes = [
   { path: 'dashboard', redirectTo: 'homePage', pathMatch: 'full' },
   { path: 'user', redirectTo: 'homePage', pathMatch: 'full' },
 
+  { path: 'admin-dashboard', component: AdmindashboardComponent, canActivate: [AuthGuard], data: { role: 'Admin' } },
   { path: 'adminbook', component: AdminbookComponent, canActivate: [AuthGuard], data: { role: 'Admin' } },
   { path: 'adminviewbook', component: AdminviewbookComponent, canActivate: [AuthGuard], data: { role: 'Admin' } },
   { path: 'adminviewappliedrequest', component: AdminviewappliedrequestComponent, canActivate: [AuthGuard], data: { role: 'Admin' } },

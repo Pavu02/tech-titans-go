@@ -10,9 +10,12 @@ import { AuthService } from '../../services/auth.service';
 export class UsernavComponent implements OnInit {
   username: string = 'user';
   userRole: string = 'User';
+  userEmail: string = '';
+  userMobile: string = '';
   showLogoutModal: boolean = false;
   showBooksDropdown: boolean = false;
   showFeedbackDropdown: boolean = false;
+  showProfileDetails: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -23,6 +26,8 @@ export class UsernavComponent implements OnInit {
     this.authService.role$.subscribe((r) => {
       this.userRole = r || this.authService.getUserRole() || 'User';
     });
+    this.userEmail = this.authService.getEmail() || '';
+    this.userMobile = this.authService.getMobileNumber() || '';
   }
 
   toggleBooksDropdown(show: boolean): void {

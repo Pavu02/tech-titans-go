@@ -1,0 +1,86 @@
+<app-adminnav></app-adminnav>
+
+<div class="dashboard-wrapper">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h2>Dashboard Overview</h2>
+      <p>Welcome back! Here's what's happening with your library today.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" routerLink="/adminbook">+ Add New Book</button>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon users-icon">⭐</div>
+      <div class="metric-content">
+        <p class="metric-label">Total Feedbacks</p>
+        <h3 class="metric-value">{{ totalFeedbacks }}</h3>
+        <span class="metric-trend positive">User sentiment</span>
+      </div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon books-icon">📚</div>
+      <div class="metric-content">
+        <p class="metric-label">Library Catalog</p>
+        <h3 class="metric-value">{{ totalBooks }}</h3>
+        <span class="metric-trend positive">Total books in DB</span>
+      </div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon rentals-icon">🔄</div>
+      <div class="metric-content">
+        <p class="metric-label">Active Rentals</p>
+        <h3 class="metric-value">{{ activeRentals }}</h3>
+        <span class="metric-trend neutral">Pending or Approved</span>
+      </div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon revenue-icon">💰</div>
+      <div class="metric-content">
+        <p class="metric-label">Total Revenue</p>
+        <h3 class="metric-value">₹{{ totalRevenue }}</h3>
+        <span class="metric-trend positive">From returned books</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-content-grid">
+    <div class="content-panel quick-links">
+      <h3>Quick Actions</h3>
+      <div class="action-grid">
+        <a routerLink="/adminviewbook" class="action-card">
+          <span class="action-icon">📖</span>
+          <span class="action-text">Manage Books</span>
+        </a>
+        <a routerLink="/adminviewappliedrequest" class="action-card">
+          <span class="action-icon">📬</span>
+          <span class="action-text">Review Requests</span>
+        </a>
+        <a routerLink="/adminviewfeedback" class="action-card">
+          <span class="action-icon">⭐</span>
+          <span class="action-text">User Feedback</span>
+        </a>
+        <div class="action-card disabled">
+          <span class="action-icon">⚙️</span>
+          <span class="action-text">System Settings</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-panel activity-feed">
+      <h3>Recent Activity</h3>
+      <ul class="feed-list" *ngIf="recentActivity.length > 0; else noActivity">
+        <li *ngFor="let act of recentActivity">
+          <span class="feed-dot" [ngClass]="{'blue': act.type === 'request', 'green': act.type === 'return', 'yellow': act.type === 'feedback'}"></span>
+          <p>{{ act.message }} <span class="highlight">{{ act.highlight }}</span></p>
+          <span class="feed-time">{{ act.date | date:'short' }}</span>
+        </li>
+      </ul>
+      <ng-template #noActivity>
+        <p style="color: var(--text-secondary); text-align: center; margin-top: 20px;">No recent activity</p>
+      </ng-template>
+    </div>
+  </div>
+</div>

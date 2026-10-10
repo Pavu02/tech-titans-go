@@ -2,8 +2,24 @@
 <app-usernav *ngIf="!isAdmin()"></app-usernav>
 
 <div class="homepage-wrapper">
-  <!-- Hero Section -->
-  <section class="hero-section">
+  <!-- Admin Redirection Banner -->
+  <section class="hero-section admin-hero-section" *ngIf="userRole === 'Admin'">
+    <div class="container hero-container" style="justify-content: center; text-align: center;">
+      <div class="hero-content" style="max-width: 800px; margin: 0 auto;">
+        <span class="hero-badge" style="background-color: #FEF3C7; color: #D97706;">🛡️ Admin Context Active</span>
+        <h1 class="hero-title">Welcome to the <br><span class="text-highlight">Admin Control Panel</span></h1>
+        <p class="hero-subtitle">
+          All administrative features, analytics, and user management tools have been moved to a dedicated dashboard.
+        </p>
+        <div class="hero-actions" style="justify-content: center;">
+          <a routerLink="/admin-dashboard" class="btn btn-primary" style="background-color: var(--primary); border-color: var(--primary); padding: 16px 32px; font-size: 18px;">Go to Admin Dashboard →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- User/Guest Hero Section -->
+  <section class="hero-section" *ngIf="userRole !== 'Admin'">
     <div class="container hero-container">
       <div class="hero-content">
         <span class="hero-badge">✨ Welcome to BookHeaven</span>
@@ -16,7 +32,6 @@
           <a routerLink="/login" class="btn btn-secondary" *ngIf="!userRole">View Catalog</a>
           
           <a routerLink="/userviewbooks" class="btn btn-primary" *ngIf="userRole === 'User'">Browse Catalog →</a>
-          <a routerLink="/adminviewbook" class="btn btn-primary" *ngIf="userRole === 'Admin'">Manage Books →</a>
         </div>
       </div>
       <div class="hero-visual">

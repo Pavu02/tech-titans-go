@@ -10,8 +10,11 @@ import { AuthService } from '../../services/auth.service';
 export class AdminnavComponent implements OnInit {
   username: string = 'admin';
   userRole: string = 'Admin';
+  userEmail: string = '';
+  userMobile: string = '';
   showLogoutModal: boolean = false;
   showBooksDropdown: boolean = false;
+  showProfileDetails: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -22,6 +25,8 @@ export class AdminnavComponent implements OnInit {
     this.authService.role$.subscribe((r) => {
       this.userRole = r || this.authService.getUserRole() || 'Admin';
     });
+    this.userEmail = this.authService.getEmail() || '';
+    this.userMobile = this.authService.getMobileNumber() || '';
   }
 
   toggleBooksDropdown(show: boolean): void {
